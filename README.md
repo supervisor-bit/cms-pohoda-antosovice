@@ -1,104 +1,127 @@
-# CMS pro Naturistický kemp
+# 🌲 CMS Pohoda Antošovice
 
-Kompletní systém správy obsahu (CMS) pro naturistický kemp postavený na PHP a MySQL.
+**Moderní content management systém pro naturistické kempy a podobná zařízení.**
 
-## Funkce
+![PHP](https://img.shields.io/badge/php-%23777BB4.svg?style=for-the-badge&logo=php&logoColor=white)
+![MySQL](https://img.shields.io/badge/mysql-%2300f.svg?style=for-the-badge&logo=mysql&logoColor=white)
+![Bootstrap](https://img.shields.io/badge/bootstrap-%23563D7C.svg?style=for-the-badge&logo=bootstrap&logoColor=white)
 
-### Frontend (Veřejná část)
-- **Responzivní design** - založený na HTML5 UP šabloně "Striped"
-- **Hlavní stránka** - zobrazení nejnovějších článků
-- **Stránky** - statické stránky (O kempu, Ubytování, Ceník, Kontakt)
-- **Galerie** - fotogalerie s lightbox efektem
-- **Rezervační formulář** - online rezervace pobytu
-- **Vyhledávání** - fulltext vyhledávání v obsahu
+## ✨ Vlastnosti
 
-### Backend (Administrace)
-- **Dashboard** - přehled statistik a rychlé akce
-- **Správa stránek** - vytváření a editace statických stránek
-- **Správa článků** - blog/novinky systém
-- **Správa galerie** - nahrávání a správa fotografií
-- **Správa rezervací** - přehled a správa rezervací
-- **Nastavení** - konfigurace webu a kontaktních informací
+### 🎨 **Frontend**
+- **Moderní responzivní design** s Bootstrap 5
+- **Glassmorphism efekty** a animace
+- **SEO optimalizované** URL struktura
+- **Mobilní-first** přístup
 
-## Instalace
+### ⚙️ **Admin rozhraní**
+- **Správa stránek a článků** s WYSIWYG editorem
+- **Upload obrázků** z disku nebo URL
+- **Quick Links systém** - správa rychlých odkazů
+- **Nastavení webu** - název, popis, kontakty
+- **Bezpečné přihlášení** s reset hesla
 
-### 1. Příprava prostředí
-- MAMP/XAMPP/WAMP s PHP 7.4+ a MySQL
-- Zkopírujte všechny soubory do složky `htdocs/moje_cms`
+### 🔐 **Bezpečnost**
+- **Password hashing** s BCrypt
+- **CSRF ochrana** pro formuláře  
+- **Session management** s timeout
+- **SQL injection ochrana** s PDO prepared statements
+
+### 📱 **Technologie**
+- **PHP 7.4+** backend
+- **MySQL/MariaDB** databáze
+- **Bootstrap 5** CSS framework
+- **FontAwesome** ikony
+
+## 🚀 Rychlá instalace
+
+### 1. Stažení
+```bash
+# Stáhněte nejnovější release
+wget https://github.com/supervisor-bit/cms-pohoda-antosovice/releases/latest/download/kemp_pohoda_cms_v2.0_20251122.zip
+
+# Rozbalte na váš webserver
+unzip kemp_pohoda_cms_v2.0_20251122.zip
+```
 
 ### 2. Databáze
-1. Otevřete phpMyAdmin (http://localhost:8888/phpMyAdmin v MAMP)
-2. Importujte nebo spusťte SQL příkazy ze souboru `database.sql`
-3. Upravte připojení k databázi v souboru `config.php` podle vašeho nastavení
+```sql
+# Vytvořte MySQL databázi
+CREATE DATABASE naturist_camp CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+# Importujte strukturu
+mysql -u root -p naturist_camp < database_complete_v2.sql
+```
 
 ### 3. Konfigurace
-Upravte následující nastavení v souboru `config.php`:
-```php
-define('DB_HOST', 'localhost');
-define('DB_NAME', 'naturisticky_kemp');  
-define('DB_USER', 'root');
-define('DB_PASS', 'root'); // Heslo dle vašeho MAMP nastavení
+```bash
+# Zkopírujte a upravte config
+cp config.php.template config.php
+nano config.php  # Upravte databázové údaje
 ```
 
-### 4. Přístup
-- **Frontend:** http://localhost:8888/moje_cms/
-- **Administrace:** http://localhost:8888/moje_cms/admin/
-- **Výchozí přihlášení:** admin / password
-
-## Struktura souborů
-
-```
-moje_cms/
-├── admin/              # Administrační rozhraní
-│   ├── assets/         # CSS styly pro admin
-│   ├── includes/       # Společné části (header)
-│   ├── index.php       # Dashboard
-│   ├── login.php       # Přihlášení
-│   ├── pages.php       # Správa stránek
-│   ├── posts.php       # Správa článků  
-│   ├── gallery.php     # Správa galerie
-│   ├── reservations.php # Správa rezervací
-│   └── settings.php    # Nastavení webu
-├── assets/             # Styly a skripty (HTML5 UP šablona)
-├── images/             # Obrázky šablony
-├── uploads/            # Nahrané soubory
-├── config.php          # Konfigurace a databázové připojení
-├── database.sql        # SQL struktura a výchozí data
-├── index.php           # Hlavní stránka
-├── page.php            # Zobrazení statických stránek
-├── galerie.php         # Fotogalerie
-├── rezervace.php       # Rezervační formulář
-└── 404.php             # Chybová stránka
+### 4. Oprávnění
+```bash
+chmod 755 uploads/
+chown -R www-data:www-data uploads/
 ```
 
-## Přizpůsobení
+### 5. Přihlášení
+- Otevřete: `https://yoursite.com/admin/`
+- Login: `admin` / `password123`
+- **Změňte heslo** v sekci Profil!
 
-### Změna vzhledu
-- Upravte CSS v souboru `assets/css/main.css`
-- Změňte obrázky ve složce `images/`
-- Přidejte vlastní logo/favicon
+## 📖 Dokumentace
 
-### Přidání funkcí
-- Systém je připraven pro rozšíření
-- Databázová struktura podporuje další funkce
-- Kód je dobře dokumentovaný pro snadnou úpravu
+- 📋 **[DISTRIBUCE.md](DISTRIBUCE.md)** - Přehled funkcí a obsahu
+- 🚀 **[INSTALACE_PRODUKCE.md](INSTALACE_PRODUKCE.md)** - Detailní instalační návod
+- 📝 **[INSTALACE.md](INSTALACE.md)** - Základní instalace
 
-## Bezpečnost
+## 🖼️ Screenshots
 
-- Hesla jsou hashována pomocí PHP password_hash()
-- Všechny uživatelské vstupy jsou sanitizovány
-- Ochrana proti SQL injection pomocí prepared statements
-- CSRF ochrana pro administrační formuláře
+### Frontend
+- Moderní responzivní design
+- Glassmorphism 404 stránka  
+- Bootstrap 5 komponenty
 
-## Podpora
+### Admin
+- Intuitivní dashboard
+- WYSIWYG editor pro stránky
+- Quick Links správa
 
-Vytvořeno na základě:
-- HTML5 UP šablona "Striped" (html5up.net)
-- PHP 7.4+
-- MySQL 5.7+
-- jQuery pro interaktivní prvky
+## 🛠️ Požadavky
 
-## Licence
+### Minimální:
+- **PHP 7.4+**
+- **MySQL 5.7+** 
+- **Apache/Nginx**
+- **100MB** místa na disku
 
-Šablona Striped je licencována pod Creative Commons Attribution 3.0 License.
-CMS kód je volně použitelný pro komerční i nekomerční účely.
+### Doporučené:
+- **PHP 8.1+**
+- **MySQL 8.0+**
+- **SSL certifikát**
+- **SSD storage**
+
+## 🤝 Přispívání
+
+Budeme rádi za příspěvky! Prosím:
+
+1. Fork repository
+2. Vytvořte feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit změny (`git commit -m 'Add some AmazingFeature'`)
+4. Push branch (`git push origin feature/AmazingFeature`) 
+5. Otevřete Pull Request
+
+## 📄 Licence
+
+Tento projekt je licencován pod MIT License - viz [LICENSE.txt](LICENSE.txt) pro detaily.
+
+## 🆘 Podpora
+
+- 🐛 **Issues:** [GitHub Issues](https://github.com/supervisor-bit/cms-pohoda-antosovice/issues)
+- 💬 **Diskuze:** [GitHub Discussions](https://github.com/supervisor-bit/cms-pohoda-antosovice/discussions)
+
+---
+
+**Vytvořeno s ❤️ pro naturistické komunity**
