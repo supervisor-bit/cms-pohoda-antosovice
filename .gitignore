@@ -1,0 +1,27 @@
+# Lokální vývojové soubory
+config.php
+*.log
+*.tmp
+.DS_Store
+
+# MAMP specifické
+.config/
+
+# Python skripty (už nejsou potřeba)
+download_*.py
+auto_download.py
+
+# Staré archivy
+*_20250819_*.zip
+database_final_complete.sql
+
+# IDE soubory
+.vscode/
+.idea/
+
+# Cache a temporary soubory
+uploads/*.jpg
+uploads/*.png
+uploads/*.gif
+uploads/*.jpeg
+!uploads/.gitkeep

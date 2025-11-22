@@ -1,0 +1,132 @@
+<?php
+// Konfiguračný soubor pro CMS Pohoda Antošovice
+// DŮLEŽITÉ: Po instalaci přejmenujte na config.php a upravte údaje
+
+// !!! VYPNĚTE ZOBRAZOVÁNÍ CHYB V PRODUKCI !!!
+// ini_set('display_errors', 0);
+// ini_set('display_startup_errors', 0);
+// error_reporting(0);
+
+// Pro vývoj/debugging můžete zapnout:
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
+// ===========================================
+// DATABÁZOVÁ KONFIGURACE - UPRAVTE!!!
+// ===========================================
+define('DB_HOST', 'localhost');              // Server databáze (obvykle localhost)
+define('DB_NAME', 'your_database_name');     // *** ZMĚŇTE NA NÁZEV VAŠÍ DATABÁZE ***
+define('DB_USER', 'your_username');          // *** ZMĚŇTE NA VAŠE DATABÁZOVÉ JMÉNO ***
+define('DB_PASS', 'your_password');          // *** ZMĚŇTE NA VAŠE DATABÁZOVÉ HESLO ***
+
+// ===========================================
+// KONFIGURACE WEBU - UPRAVTE DLE POTŘEBY
+// ===========================================
+define('SITE_TITLE', 'Pohoda Antošovice');
+define('SITE_DESCRIPTION', 'Naturistický kemp - relaxace v harmonii s přírodou');
+define('SITE_URL', 'https://yourdomain.com');    // *** ZMĚŇTE NA VAŠI DOMÉNU ***
+
+// ===========================================
+// CESTY - OBVYKLE NEMĚŇTE
+// ===========================================
+define('BASE_PATH', __DIR__);
+define('UPLOADS_PATH', BASE_PATH . '/uploads/');
+define('UPLOADS_URL', SITE_URL . '/uploads/');
+
+// ===========================================
+// BEZPEČNOSTNÍ NASTAVENÍ
+// ===========================================
+define('SESSION_NAME', 'CMS_SESSION');
+define('ADMIN_SESSION_TIMEOUT', 3600); // 1 hodina
+
+// Salt pro hesla (vygenerujte nový!)
+define('PASSWORD_SALT', 'your_unique_salt_here_change_this');
+
+// ===========================================
+// EMAIL KONFIGURACE (volitelné)
+// ===========================================
+define('SMTP_HOST', 'smtp.yourdomain.com');
+define('SMTP_USER', 'noreply@yourdomain.com');
+define('SMTP_PASS', 'your_email_password');
+define('SMTP_PORT', 587);
+define('EMAIL_FROM', 'noreply@yourdomain.com');
+define('EMAIL_FROM_NAME', 'Pohoda Antošovice');
+
+try {
+    // Připojení k databázi
+    $dsn = "mysql:host=" . DB_HOST . ";dbname=" . DB_NAME . ";charset=utf8mb4";
+    $pdo = new PDO($dsn, DB_USER, DB_PASS, [
+        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+        PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+        PDO::ATTR_EMULATE_PREPARES => false,
+        PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8mb4"
+    ]);
+    
+} catch (PDOException $e) {
+    // V produkci nezobrazujte detaily chyb
+    if (ini_get('display_errors')) {
+        die("Chyba připojení k databázi: " . $e->getMessage());
+    } else {
+        die("Chyba připojení k databázi. Kontaktujte administrátora.");
+    }
+}
+
+// Spuštění session
+if (session_status() == PHP_SESSION_NONE) {
+    session_name(SESSION_NAME);
+    session_start();
+}
+
+// ===========================================
+// POMOCNÉ FUNKCE
+// ===========================================
+
+/**
+ * Získá absolutní URL webu
+ */
+function getSiteUrl() {
+    return rtrim(SITE_URL, '/');
+}
+
+/**
+ * Získá URL pro upload soubor
+ */
+function getUploadUrl($filename) {
+    return getSiteUrl() . '/uploads/' . $filename;
+}
+
+/**
+ * Kontrola, zda je uživatel přihlášený
+ */
+function isLoggedIn() {
+    return isset($_SESSION['admin_id']) && !empty($_SESSION['admin_id']);
+}
+
+/**
+ * Přesměrování na přihlášení
+ */
+function requireLogin() {
+    if (!isLoggedIn()) {
+        header('Location: login.php');
+        exit;
+    }
+}
+
+/**
+ * Vygenerování CSRF tokenu
+ */
+function generateCSRFToken() {
+    if (!isset($_SESSION['csrf_token'])) {
+        $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+    }
+    return $_SESSION['csrf_token'];
+}
+
+/**
+ * Kontrola CSRF tokenu
+ */
+function validateCSRFToken($token) {
+    return isset($_SESSION['csrf_token']) && hash_equals($_SESSION['csrf_token'], $token);
+}
+?>
