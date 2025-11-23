@@ -60,7 +60,14 @@ include 'includes/admin_header.php';
                                 </div>
                                 <div class="stat-content">
                                     <span class="stat-number"><?= date('j') ?></span>
-                                    <span class="stat-label"><?= date('M') ?></span>
+                                    <span class="stat-label"><?php 
+                                        $czech_months = [
+                                            1 => 'led', 2 => 'úno', 3 => 'bře', 4 => 'dub', 
+                                            5 => 'kvě', 6 => 'čer', 7 => 'čvc', 8 => 'srp', 
+                                            9 => 'zář', 10 => 'říj', 11 => 'lis', 12 => 'pro'
+                                        ];
+                                        echo $czech_months[(int)date('n')];
+                                    ?></span>
                                 </div>
                             </div>
                         </div>

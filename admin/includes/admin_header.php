@@ -27,51 +27,152 @@ $current_page = basename($_SERVER['PHP_SELF'], '.php');
 <body class="admin-body">
 
     <div class="admin-container">
-        <!-- Modern Header -->
-        <header class="admin-header">
-            <div class="header-content">
-                <div class="logo">
-                    <a href="index.php">
-                        <i class="fas fa-cogs me-2"></i>
-                        <h1>Správa webu</h1>
-                    </a>
-                </div>
-                
-                <nav class="admin-nav">
-                    <ul>
-                        <li><a href="index.php" <?= $current_page === 'index' ? 'class="active"' : '' ?>>
-                            <i class="fas fa-tachometer-alt me-2"></i>Dashboard
-                        </a></li>
-                        <li><a href="pages.php" <?= $current_page === 'pages' ? 'class="active"' : '' ?>>
-                            <i class="fas fa-file-alt me-2"></i>Stránky
-                        </a></li>
-                        <li><a href="posts.php" <?= $current_page === 'posts' ? 'class="active"' : '' ?>>
-                            <i class="fas fa-newspaper me-2"></i>Články
-                        </a></li>
-                        <li><a href="settings.php" <?= $current_page === 'settings' ? 'class="active"' : '' ?>>
-                            <i class="fas fa-cog me-2"></i>Nastavení
-                        </a></li>
-                        <li><a href="quick_links.php" <?= $current_page === 'quick_links' ? 'class="active"' : '' ?>>
-                            <i class="fas fa-external-link-alt me-2"></i>Rychlé odkazy
-                        </a></li>
-                        <li><a href="profile.php" <?= $current_page === 'profile' ? 'class="active"' : '' ?>>
-                            <i class="fas fa-user-cog me-2"></i>Profil
-                        </a></li>
-                        <li><a href="../" target="_blank">
-                            <i class="fas fa-external-link-alt me-2"></i>Zobrazit web
-                        </a></li>
-                        <li><a href="logout.php" class="logout-link">
-                            <i class="fas fa-sign-out-alt me-2"></i>Odhlásit se
-                        </a></li>
-                    </ul>
-                </nav>
-                
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <a href="index.php" class="sidebar-logo">
+                    <i class="fas fa-cogs"></i>
+                    <span class="logo-text">Správa webu</span>
+                </a>
+                <button class="sidebar-toggle" id="sidebarToggle">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+            
+            <nav class="sidebar-nav">
+                <ul class="nav-list">
+                    <li class="nav-item">
+                        <a href="index.php" class="nav-link <?= $current_page === 'index' ? 'active' : '' ?>">
+                            <i class="fas fa-tachometer-alt"></i>
+                            <span class="nav-text">Dashboard</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="pages.php" class="nav-link <?= $current_page === 'pages' ? 'active' : '' ?>">
+                            <i class="fas fa-file-alt"></i>
+                            <span class="nav-text">Stránky</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="posts.php" class="nav-link <?= $current_page === 'posts' ? 'active' : '' ?>">
+                            <i class="fas fa-newspaper"></i>
+                            <span class="nav-text">Články</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="events.php" class="nav-link <?= $current_page === 'events' ? 'active' : '' ?>">
+                            <i class="fas fa-calendar-alt"></i>
+                            <span class="nav-text">Kalendář akcí</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="gallery.php" class="nav-link <?= $current_page === 'gallery' ? 'active' : '' ?>">
+                            <i class="fas fa-images"></i>
+                            <span class="nav-text">Galerie okolí</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="settings.php" class="nav-link <?= $current_page === 'settings' ? 'active' : '' ?>">
+                            <i class="fas fa-cog"></i>
+                            <span class="nav-text">Nastavení</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="quick_links.php" class="nav-link <?= $current_page === 'quick_links' ? 'active' : '' ?>">
+                            <i class="fas fa-external-link-alt"></i>
+                            <span class="nav-text">Rychlé odkazy</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="profile.php" class="nav-link <?= $current_page === 'profile' ? 'active' : '' ?>">
+                            <i class="fas fa-user-cog"></i>
+                            <span class="nav-text">Profil</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="../" target="_blank" class="nav-link">
+                            <i class="fas fa-external-link-alt"></i>
+                            <span class="nav-text">Zobrazit web</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+            
+            <div class="sidebar-footer">
                 <div class="user-info">
-                    <i class="fas fa-user-circle me-2"></i>
-                    Přihlášen jako: <strong><?= $_SESSION['admin_username'] ?? 'Admin' ?></strong>
+                    <i class="fas fa-user-circle"></i>
+                    <div class="user-details">
+                        <span class="user-label">Přihlášen jako:</span>
+                        <span class="user-name"><?= $_SESSION['admin_username'] ?? 'Admin' ?></span>
+                    </div>
                 </div>
+                <a href="logout.php" class="logout-btn">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span class="nav-text">Odhlásit se</span>
+                </a>
+            </div>
+        </aside>
+
+        <!-- Top Header for mobile -->
+        <header class="top-header">
+            <button class="mobile-sidebar-toggle" id="mobileSidebarToggle">
+                <i class="fas fa-bars"></i>
+            </button>
+            <div class="header-title">
+                <h1><?= $current_page === 'index' ? 'Dashboard' : ucfirst($current_page) ?></h1>
+            </div>
+            <div class="mobile-user-info">
+                <i class="fas fa-user-circle"></i>
+                <span><?= $_SESSION['admin_username'] ?? 'Admin' ?></span>
             </div>
         </header>
 
         <!-- Main Content -->
-        <main class="admin-content"><?php
+        <main class="main-content">
+            
+        <!-- Sidebar JavaScript -->
+        <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const sidebar = document.querySelector('.sidebar');
+            const sidebarToggle = document.getElementById('sidebarToggle');
+            const mobileSidebarToggle = document.getElementById('mobileSidebarToggle');
+            const mainContent = document.querySelector('.main-content');
+            
+            // Toggle sidebar
+            function toggleSidebar() {
+                sidebar.classList.toggle('collapsed');
+                mainContent.classList.toggle('sidebar-collapsed');
+            }
+            
+            // Toggle mobile sidebar
+            function toggleMobileSidebar() {
+                sidebar.classList.toggle('mobile-open');
+            }
+            
+            // Event listeners
+            if (sidebarToggle) {
+                sidebarToggle.addEventListener('click', toggleSidebar);
+            }
+            
+            if (mobileSidebarToggle) {
+                mobileSidebarToggle.addEventListener('click', toggleMobileSidebar);
+            }
+            
+            // Close mobile sidebar when clicking outside
+            document.addEventListener('click', function(e) {
+                if (window.innerWidth <= 768) {
+                    if (!sidebar.contains(e.target) && !mobileSidebarToggle.contains(e.target)) {
+                        sidebar.classList.remove('mobile-open');
+                    }
+                }
+            });
+            
+            // Handle resize
+            window.addEventListener('resize', function() {
+                if (window.innerWidth > 768) {
+                    sidebar.classList.remove('mobile-open');
+                }
+            });
+        });
+        </script>
+        <?php

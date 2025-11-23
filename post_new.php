@@ -65,7 +65,7 @@ $menu = generateBootstrapMenu($pdo, '');
     <!-- Bootstrap Icons -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
     <!-- FontAwesome -->
-    <link href="assets/css/fontawesome-all.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     
     <style>
         :root {
@@ -94,15 +94,16 @@ $menu = generateBootstrapMenu($pdo, '');
 
         .navbar-brand {
             font-weight: 700 !important;
-            font-size: 1.75rem !important;
+            font-size: 1.4rem !important;
             color: white !important;
             text-decoration: none !important;
             display: flex !important;
             align-items: center !important;
+            margin-right: 2rem !important;
         }
         
         .navbar-brand i {
-            font-size: 1.75rem !important;
+            font-size: 1.4rem !important;
         }
 
         .navbar-nav .nav-link {
@@ -251,13 +252,13 @@ $menu = generateBootstrapMenu($pdo, '');
 
         /* Article Header */
         .article-header {
-            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
             color: white;
-            padding: 80px 0 60px;
+            padding: 6rem 0 4rem;
             position: relative;
             overflow: hidden;
         }
-        
+
         .article-header::before {
             content: '';
             position: absolute;
@@ -265,10 +266,10 @@ $menu = generateBootstrapMenu($pdo, '');
             left: 0;
             right: 0;
             bottom: 0;
-            background: linear-gradient(135deg, rgba(45, 80, 22, 0.8) 0%, rgba(107, 142, 35, 0.6) 50%, rgba(34, 60, 16, 0.8) 100%);
-            z-index: 1;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 100" fill="white" opacity="0.1"><polygon points="0,0 1000,0 1000,80 0,100"/></svg>') no-repeat bottom center;
+            background-size: cover;
         }
-        
+
         .article-header-content {
             position: relative;
             z-index: 2;
@@ -291,15 +292,30 @@ $menu = generateBootstrapMenu($pdo, '');
         
         /* Main Content */
         .main-content {
-            padding: 60px 0;
+            padding: 4rem 0;
+            position: relative;
         }
-        
+
         .article-content {
-            background: white;
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
             padding: 2.5rem;
             margin-bottom: 2rem;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(45, 80, 22, 0.1);
+            position: relative;
+        }
+
+        .article-content::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
+            border-radius: 20px 20px 0 0;
         }
         
         .article-image {
@@ -496,7 +512,8 @@ $menu = generateBootstrapMenu($pdo, '');
     <nav class="navbar navbar-expand-lg sticky-top">
         <div class="container">
             <a class="navbar-brand" href="index.php">
-                <i class="fas fa-leaf me-2"></i>Pohoda Antošovice
+                <i class="fas fa-tree me-2"></i>
+                <?= htmlspecialchars($settings['site_title'] ?? 'Pohoda Antošovice') ?>
             </a>
             
             <!-- Hamburger menu pro mobile -->
@@ -512,18 +529,18 @@ $menu = generateBootstrapMenu($pdo, '');
         </div>
     </nav>
 
-    <!-- Article Header -->
-    <section class="article-header">
+    <!-- Page Header -->
+    <section class="page-header">
         <div class="container">
-            <div class="article-header-content text-center">
-                <h1><?= htmlspecialchars($post['title']) ?></h1>
+            <div class="page-header-content text-center">
+                <h1 class="display-4 mb-3"><?= htmlspecialchars($post['title']) ?></h1>
                 <?php if (!empty($post['excerpt'])): ?>
                     <p class="lead"><?= htmlspecialchars($post['excerpt']) ?></p>
                 <?php endif; ?>
                 <div class="article-meta">
                     <span><i class="fas fa-calendar me-1"></i><?= date('j. n. Y', strtotime($post['created_at'])) ?></span>
                     <?php if (!empty($post['updated_at']) && $post['updated_at'] !== $post['created_at']): ?>
-                        <span><i class="fas fa-edit me-1"></i>Aktualizováno: <?= date('j. n. Y', strtotime($post['updated_at'])) ?></span>
+                        <span class="ms-3"><i class="fas fa-edit me-1"></i>Aktualizováno: <?= date('j. n. Y', strtotime($post['updated_at'])) ?></span>
                     <?php endif; ?>
                 </div>
             </div>
@@ -617,13 +634,15 @@ $menu = generateBootstrapMenu($pdo, '');
         <div class="container">
             <div class="row">
                 <div class="col-md-6">
-                    <h5><i class="fas fa-leaf me-2"></i>Pohoda Antošovice</h5>
+                    <h5><i class="fas fa-leaf me-2"></i><?= htmlspecialchars($settings['site_title'] ?? 'Pohoda Antošovice') ?></h5>
                     <p><?= htmlspecialchars($settings['site_description'] ?? 'Naturistický kemp - relaxace v harmonii s přírodou') ?></p>
                 </div>
                 <div class="col-md-3">
                     <h6>Rychlé odkazy</h6>
                     <ul class="list-unstyled">
                         <li><a href="index.php">Domů</a></li>
+                        <li><a href="events.php">Akce</a></li>
+                        <li><a href="gallery.php">Fotky okolí</a></li>
                         <?php if (!empty($quickLinks)): ?>
                             <?php foreach ($quickLinks as $link): ?>
                                 <li><a href="<?= htmlspecialchars($link['url']) ?>" 
@@ -631,7 +650,6 @@ $menu = generateBootstrapMenu($pdo, '');
                             <?php endforeach; ?>
                         <?php else: ?>
                             <li><a href="page_new.php?slug=o-organizaci">O organizaci</a></li>
-                            <li><a href="page_new.php?slug=provozni-rad">Provozní řád</a></li>
                         <?php endif; ?>
                     </ul>
                 </div>

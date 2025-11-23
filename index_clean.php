@@ -100,7 +100,7 @@ try {
     <!-- Bootstrap Icons -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
     <!-- FontAwesome -->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="assets/css/fontawesome-all.min.css" rel="stylesheet">
     
     <style>
         :root {
@@ -129,16 +129,15 @@ try {
 
         .navbar-brand {
             font-weight: 700 !important;
-            font-size: 1.4rem !important;
+            font-size: 1.75rem !important;
             color: white !important;
             text-decoration: none !important;
             display: flex !important;
             align-items: center !important;
-            margin-right: 2rem !important;
         }
         
         .navbar-brand i {
-            font-size: 1.4rem !important;
+            font-size: 1.75rem !important;
         }
 
         .navbar-nav .nav-link {
@@ -193,28 +192,9 @@ try {
 
         /* Main content */
         .main-content {
-            padding: 4rem 0;
+            margin: -2rem 0 4rem 0;
             position: relative;
-        }
-
-        .content-section {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            border-radius: 20px;
-            padding: 2rem;
-            margin-bottom: 2rem;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
-            border: 1px solid rgba(45, 80, 22, 0.1);
-        }
-
-        .section-title {
-            color: var(--primary-color);
-            font-size: 2rem;
-            font-weight: 700;
-            margin-bottom: 2rem;
-            padding-bottom: 0.5rem;
-            border-bottom: 3px solid var(--accent-color);
-            text-align: center;
+            z-index: 2;
         }
 
         .content-card {
@@ -450,7 +430,7 @@ try {
     <nav class="navbar navbar-expand-lg navbar-dark sticky-top">
         <div class="container">
             <a class="navbar-brand" href="index.php">
-                <i class="fas fa-tree me-2"></i>
+                <i class="bi bi-tree-fill me-2"></i>
                 <?= htmlspecialchars($settings['site_title'] ?? 'Pohoda Antošovice') ?>
             </a>
             
@@ -476,19 +456,9 @@ try {
                     <a href="page_new.php?slug=vice-informaci" class="btn btn-primary btn-lg me-3">
                         <i class="fas fa-info-circle me-2"></i>Více informací
                     </a>
-                    <a href="page_new.php?slug=kontakt" class="btn btn-outline-light btn-lg me-3">
+                    <a href="page_new.php?slug=kontakt" class="btn btn-outline-light btn-lg">
                         <i class="fas fa-envelope me-2"></i>Kontakt
                     </a>
-                    <?php if (!empty($settings['facebook_url'])): ?>
-                    <a href="<?= htmlspecialchars($settings['facebook_url']) ?>" target="_blank" class="btn btn-outline-light btn-lg me-3">
-                        <i class="fab fa-facebook-f me-2"></i>Facebook
-                    </a>
-                    <?php endif; ?>
-                    <?php if (!empty($settings['instagram_url'])): ?>
-                    <a href="<?= htmlspecialchars($settings['instagram_url']) ?>" target="_blank" class="btn btn-outline-light btn-lg">
-                        <i class="fab fa-instagram me-2"></i>Instagram
-                    </a>
-                    <?php endif; ?>
                 </div>
             </div>
         </div>
@@ -500,73 +470,51 @@ try {
             <div class="row">
                 <!-- Hlavní obsah - články -->
                 <div class="col-lg-8">
-                    <div class="content-section">
-                        <h2 class="section-title">Nejnovější novinky</h2>
-                        <div class="row g-4">
-                            <?php if (empty($posts)): ?>
-                            <div class="col-md-4">
-                                <div class="content-card">
-                                    <h5>Vítejte v našem kempu</h5>
-                                    <p>Jsme rádi, že jste navštívili naše stránky. Náš naturistický kemp nabízí jedinečný zážitek v souladu s přírodou.</p>
-                                    <a href="page_new.php?slug=vice-informaci" class="btn btn-primary">
-                                        <i class="fas fa-arrow-right me-2"></i>Více informací
-                                    </a>
-                                </div>
+                    <h2 class="mb-5">Nejnovější novinky</h2>
+                    <div class="row g-4">
+                        <?php if (empty($posts)): ?>
+                        <div class="col-md-6">
+                            <div class="content-card">
+                                <h5>Vítejte v našem kempu</h5>
+                                <p>Jsme rádi, že jste navštívili naše stránky. Náš naturistický kemp nabízí jedinečný zážitek v souladu s přírodou.</p>
+                                <a href="page_new.php?slug=vice-informaci" class="btn btn-primary">
+                                    <i class="fas fa-arrow-right me-2"></i>Více informací
+                                </a>
                             </div>
-                            <div class="col-md-4">
-                                <div class="content-card">
-                                    <h5>Kontaktujte nás</h5>
-                                    <p>Máte otázky nebo chcete rezervovat pobyt? Neváhejte nás kontaktovat telefonicky nebo emailem.</p>
-                                    <a href="page_new.php?slug=kontakt" class="btn btn-primary">
-                                        <i class="fas fa-envelope me-2"></i>Kontakt
-                                    </a>
-                                </div>
-                            </div>
-                            <?php if (!empty($settings['facebook_url']) || !empty($settings['instagram_url'])): ?>
-                            <div class="col-md-4">
-                                <div class="content-card">
-                                    <h5>Sledujte nás</h5>
-                                    <p>Zůstaňte v kontaktu a sledujte naše nejnovější příspěvky a fotky z kempu na sociálních sítích.</p>
-                                    <div class="d-flex flex-column gap-2">
-                                        <?php if (!empty($settings['facebook_url'])): ?>
-                                        <a href="<?= htmlspecialchars($settings['facebook_url']) ?>" target="_blank" class="btn btn-primary">
-                                            <i class="fab fa-facebook-f me-2"></i>Facebook
-                                        </a>
-                                        <?php endif; ?>
-                                        <?php if (!empty($settings['instagram_url'])): ?>
-                                        <a href="<?= htmlspecialchars($settings['instagram_url']) ?>" target="_blank" class="btn btn-primary">
-                                            <i class="fab fa-instagram me-2"></i>Instagram
-                                        </a>
-                                        <?php endif; ?>
-                                    </div>
-                                </div>
-                            </div>
-                            <?php endif; ?>
-                            <?php else: ?>
-                            <?php foreach ($posts as $post): ?>
-                            <div class="col-md-6 mb-4">
-                                <div class="content-card h-100">
-                                    <?php if ($post['featured_image']): ?>
-                                    <img src="<?= htmlspecialchars($post['featured_image']) ?>" class="card-img-top" alt="<?= htmlspecialchars($post['title']) ?>">
-                                    <?php endif; ?>
-                                    <div class="card-body">
-                                        <h5 class="card-title"><?= htmlspecialchars($post['title']) ?></h5>
-                                        <p class="card-text"><?= htmlspecialchars($post['excerpt'] ?? '') ?></p>
-                                        <small class="text-muted">
-                                            <i class="fas fa-calendar me-1"></i>
-                                            <?= date('j.n.Y', strtotime($post['created_at'])) ?>
-                                        </small>
-                                    </div>
-                                    <div class="card-footer bg-transparent">
-                                        <a href="post_new.php?slug=<?= htmlspecialchars($post['slug']) ?>" class="btn btn-primary">
-                                            <i class="fas fa-arrow-right me-2"></i>Číst více
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-                            <?php endforeach; ?>
-                            <?php endif; ?>
                         </div>
+                        <div class="col-md-6">
+                            <div class="content-card">
+                                <h5>Kontaktujte nás</h5>
+                                <p>Máte otázky nebo chcete rezervovat pobyt? Neváhejte nás kontaktovat telefonicky nebo emailem.</p>
+                                <a href="page_new.php?slug=kontakt" class="btn btn-primary">
+                                    <i class="fas fa-envelope me-2"></i>Kontakt
+                                </a>
+                            </div>
+                        </div>
+                        <?php else: ?>
+                        <?php foreach ($posts as $post): ?>
+                        <div class="col-md-6 mb-4">
+                            <div class="content-card h-100">
+                                <?php if ($post['featured_image']): ?>
+                                <img src="<?= htmlspecialchars($post['featured_image']) ?>" class="card-img-top" alt="<?= htmlspecialchars($post['title']) ?>">
+                                <?php endif; ?>
+                                <div class="card-body">
+                                    <h5 class="card-title"><?= htmlspecialchars($post['title']) ?></h5>
+                                    <p class="card-text"><?= htmlspecialchars($post['excerpt'] ?? '') ?></p>
+                                    <small class="text-muted">
+                                        <i class="fas fa-calendar me-1"></i>
+                                        <?= date('j.n.Y', strtotime($post['created_at'])) ?>
+                                    </small>
+                                </div>
+                                <div class="card-footer bg-transparent">
+                                    <a href="post_new.php?slug=<?= htmlspecialchars($post['slug']) ?>" class="btn btn-primary">
+                                        <i class="fas fa-arrow-right me-2"></i>Číst více
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <?php endforeach; ?>
+                        <?php endif; ?>
                     </div>
                 </div>
 
@@ -584,14 +532,7 @@ try {
                                 <div class="event-item">
                                     <div class="event-date">
                                         <span class="day"><?= date('j', strtotime($event['start_date'])) ?></span>
-                                        <span class="month"><?php 
-                                            $czech_months = [
-                                                1 => 'led', 2 => 'úno', 3 => 'bře', 4 => 'dub', 
-                                                5 => 'kvě', 6 => 'čer', 7 => 'čvc', 8 => 'srp', 
-                                                9 => 'zář', 10 => 'říj', 11 => 'lis', 12 => 'pro'
-                                            ];
-                                            echo $czech_months[(int)date('n', strtotime($event['start_date']))];
-                                        ?></span>
+                                        <span class="month"><?= date('M', strtotime($event['start_date'])) ?></span>
                                     </div>
                                     <div class="event-details">
                                         <h6 class="event-title">
@@ -641,63 +582,6 @@ try {
                         <?php endif; ?>
                     </div>
 
-                    <!-- Galerie fotek okolí widget -->
-                    <?php 
-                    $featured_photos = getGalleryPhotos($pdo, true, 4); // Načteme max 4 hlavní fotky
-                    if (!empty($featured_photos)): 
-                    ?>
-                    <div class="sidebar-widget">
-                        <h3 class="widget-title">
-                            <i class="fas fa-images me-2"></i>Fotky okolí
-                        </h3>
-                        
-                        <div class="gallery-widget">
-                            <div class="row g-2">
-                                <?php foreach ($featured_photos as $index => $photo): ?>
-                                    <div class="col-6">
-                                        <div class="gallery-thumb">
-                                            <img src="<?= htmlspecialchars($photo['file_path']) ?>" 
-                                                 class="img-fluid rounded" 
-                                                 alt="<?= htmlspecialchars($photo['alt_text'] ?: $photo['title']) ?>"
-                                                 style="height: 80px; object-fit: cover; width: 100%; cursor: pointer;"
-                                                 data-bs-toggle="modal" 
-                                                 data-bs-target="#galleryModal<?= $photo['id'] ?>">
-                                        </div>
-                                    </div>
-                                    
-                                    <!-- Modal pro každou fotku -->
-                                    <div class="modal fade" id="galleryModal<?= $photo['id'] ?>" tabindex="-1">
-                                        <div class="modal-dialog modal-lg modal-dialog-centered">
-                                            <div class="modal-content">
-                                                <div class="modal-header">
-                                                    <h5 class="modal-title"><?= htmlspecialchars($photo['title']) ?></h5>
-                                                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                                                </div>
-                                                <div class="modal-body text-center">
-                                                    <img src="<?= htmlspecialchars($photo['file_path']) ?>" 
-                                                         class="img-fluid" 
-                                                         alt="<?= htmlspecialchars($photo['alt_text'] ?: $photo['title']) ?>">
-                                                    <?php if ($photo['description']): ?>
-                                                        <div class="mt-3 text-muted">
-                                                            <?= htmlspecialchars($photo['description']) ?>
-                                                        </div>
-                                                    <?php endif; ?>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                <?php endforeach; ?>
-                            </div>
-                            
-                            <div class="text-center mt-3">
-                                <a href="gallery.php" class="btn btn-outline-primary">
-                                    <i class="fas fa-images me-2"></i>Všechny fotky
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                    <?php endif; ?>
-
                     <!-- Quick links widget -->
                     <?php if (!empty($quickLinks)): ?>
                     <div class="sidebar-widget">
@@ -726,58 +610,60 @@ try {
         <div class="container">
             <div class="row">
                 <div class="col-md-6">
-                    <h5><i class="fas fa-leaf me-2"></i><?= htmlspecialchars($settings['site_title'] ?? 'Pohoda Antošovice') ?></h5>
-                    <p><?= htmlspecialchars($settings['site_description'] ?? 'Naturistický kemp - relaxace v harmonii s přírodou') ?></p>
-                </div>
-                <div class="col-md-3">
-                    <h6>Rychlé odkazy</h6>
-                    <ul class="list-unstyled">
-                        <li><a href="index.php">Domů</a></li>
-                        <li><a href="events.php">Akce</a></li>
-                        <li><a href="gallery.php">Fotky okolí</a></li>
-                        <?php if (!empty($quickLinks)): ?>
-                            <?php foreach ($quickLinks as $link): ?>
-                                <li><a href="<?= htmlspecialchars($link['url']) ?>" 
-                                       title="<?= htmlspecialchars($link['description'] ?? '') ?>">
-                                    <?= htmlspecialchars($link['title']) ?>
-                                </a></li>
-                            <?php endforeach; ?>
-                        <?php else: ?>
-                            <li><a href="page_new.php?slug=o-organizaci">O organizaci</a></li>
+                    <h5><?= htmlspecialchars($settings['site_title'] ?? 'Pohoda Antošovice') ?></h5>
+                    <p><?= htmlspecialchars($settings['site_description'] ?? '') ?></p>
+                    
+                    <?php if (!empty($settings['contact_email']) || !empty($settings['contact_phone'])): ?>
+                    <p>
+                        <?php if (!empty($settings['contact_email'])): ?>
+                            <i class="fas fa-envelope me-2"></i>
+                            <a href="mailto:<?= htmlspecialchars($settings['contact_email']) ?>">
+                                <?= htmlspecialchars($settings['contact_email']) ?>
+                            </a><br>
                         <?php endif; ?>
-                    </ul>
-                </div>
-                <div class="col-md-3">
-                    <h6>Kontakt</h6>
-                    <?php if (!empty($settings['contact_email'])): ?>
-                        <p><i class="fas fa-envelope me-2"></i><?= htmlspecialchars($settings['contact_email']) ?></p>
+                        
+                        <?php if (!empty($settings['contact_phone'])): ?>
+                            <i class="fas fa-phone me-2"></i>
+                            <a href="tel:<?= htmlspecialchars($settings['contact_phone']) ?>">
+                                <?= htmlspecialchars($settings['contact_phone']) ?>
+                            </a>
+                        <?php endif; ?>
+                    </p>
                     <?php endif; ?>
-                    <?php if (!empty($settings['contact_phone'])): ?>
-                        <p><i class="fas fa-phone me-2"></i><?= htmlspecialchars($settings['contact_phone']) ?></p>
+                </div>
+                <div class="col-md-6">
+                    <?php if (!empty($quickLinks)): ?>
+                        <h5>Rychlé odkazy</h5>
+                        <div class="quick-links">
+                            <?php foreach ($quickLinks as $link): ?>
+                                <a href="<?= htmlspecialchars($link['url']) ?>" 
+                                   title="<?= htmlspecialchars($link['description'] ?? '') ?>"
+                                   class="d-block mb-2">
+                                    <?= htmlspecialchars($link['title']) ?>
+                                </a>
+                            <?php endforeach; ?>
+                        </div>
+                    <?php endif; ?>
+                    
+                    <!-- Social Media Links -->
+                    <?php if (!empty($settings['facebook_url']) || !empty($settings['instagram_url'])): ?>
+                    <div class="mt-4">
+                        <h6>Sledujte nás</h6>
+                        <?php if (!empty($settings['facebook_url'])): ?>
+                            <a href="<?= htmlspecialchars($settings['facebook_url']) ?>" target="_blank" class="me-3">
+                                <i class="fab fa-facebook-f"></i> Facebook
+                            </a>
+                        <?php endif; ?>
+                        
+                        <?php if (!empty($settings['instagram_url'])): ?>
+                            <a href="<?= htmlspecialchars($settings['instagram_url']) ?>" target="_blank">
+                                <i class="fab fa-instagram"></i> Instagram
+                            </a>
+                        <?php endif; ?>
+                    </div>
                     <?php endif; ?>
                 </div>
             </div>
-            <hr class="my-4">
-            <div class="text-center">
-                <p>&copy; <?= date('Y') ?> <?= htmlspecialchars($settings['site_title'] ?? 'Pohoda Antošovice') ?>. Všechna práva vyhrazena.</p>
-            </div>
-            
-            <!-- Social Media Links -->
-            <?php if (!empty($settings['facebook_url']) || !empty($settings['instagram_url'])): ?>
-            <div class="text-center mt-3">
-                <?php if (!empty($settings['facebook_url'])): ?>
-                    <a href="<?= htmlspecialchars($settings['facebook_url']) ?>" target="_blank" class="me-3">
-                        <i class="fab fa-facebook-f"></i> Facebook
-                    </a>
-                <?php endif; ?>
-                
-                <?php if (!empty($settings['instagram_url'])): ?>
-                    <a href="<?= htmlspecialchars($settings['instagram_url']) ?>" target="_blank">
-                        <i class="fab fa-instagram"></i> Instagram
-                    </a>
-                <?php endif; ?>
-            </div>
-            <?php endif; ?>
         </div>
     </footer>
 
