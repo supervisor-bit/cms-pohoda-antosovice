@@ -152,18 +152,47 @@ try {
             text-transform: uppercase;
             font-size: 0.9rem;
             letter-spacing: 0.5px;
+            background: rgba(255,255,255,0.05);
+            overflow: hidden;
+        }
+        
+        /* Striped efekt */
+        .navbar-nav .nav-item:nth-child(odd) .nav-link {
+            background: rgba(255,255,255,0.08);
+        }
+        
+        .navbar-nav .nav-item:nth-child(even) .nav-link {
+            background: rgba(0,0,0,0.08);
+        }
+        
+        /* Shimmer efekt */
+        .navbar-nav .nav-link:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: left 0.5s ease;
+        }
+        
+        .navbar-nav .nav-link:hover:before {
+            left: 100%;
         }
         
         .navbar-nav .nav-link:hover {
             color: white !important;
-            background: rgba(255,255,255,0.15);
+            background: rgba(255,255,255,0.25) !important;
             transform: translateY(-1px);
+            box-shadow: 0 4px 15px rgba(255,255,255,0.1);
         }
         
         .navbar-nav .nav-link.active {
             color: white !important;
-            background: rgba(255,255,255,0.2);
+            background: rgba(255,255,255,0.3) !important;
             font-weight: 600;
+            box-shadow: 0 4px 20px rgba(255,255,255,0.15);
         }
 
         /* Page Header */
@@ -734,7 +763,15 @@ try {
                     <ul class="list-unstyled">
                         <li><a href="index.php">Domů</a></li>
                         <li><a href="events.php">Akce</a></li>
-                        <li><a href="gallery.php">Fotky okolí</a></li>
+                        <?php 
+                        // Zobrazit Fotky okolí pouze pokud existují publikované fotky
+                        try {
+                            $photo_check = $pdo->query("SELECT COUNT(*) FROM gallery_photos WHERE is_published = 1");
+                            if ($photo_check && $photo_check->fetchColumn() > 0): ?>
+                                <li><a href="gallery.php">Fotky okolí</a></li>
+                        <?php endif;
+                        } catch (Exception $e) { /* tabulka neexistuje */ }
+                        ?>
                         <?php if (!empty($quickLinks)): ?>
                             <?php foreach ($quickLinks as $link): ?>
                                 <li><a href="<?= htmlspecialchars($link['url']) ?>" 

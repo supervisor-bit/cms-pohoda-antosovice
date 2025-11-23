@@ -1,6 +1,6 @@
 <?php
 // Centrální funkce pro generování menu
-function generateBootstrapMenu($pdo, $current_slug) {
+function generateBootstrapMenu($pdo, $current_slug, $current_parent_slug = '') {
     try {
         // Načtení všech stránek (pouze s menu_order >= 0)
         $stmt = $pdo->prepare("SELECT id, title, slug, parent_slug, icon, menu_order FROM pages WHERE is_published = 1 AND menu_order >= 0 ORDER BY menu_order ASC, title ASC");
@@ -57,20 +57,26 @@ function generateBootstrapMenu($pdo, $current_slug) {
         // Generování menu položek (z administrace)
         foreach ($main_pages as $page) {
             $has_submenu = isset($sub_pages[$page['slug']]);
-            $is_active = ($current_slug === $page['slug']);
+            // Přesná shoda včetně kontroly, že current_slug není prázdný
+            $is_active = (!empty($current_slug) && $current_slug === $page['slug']);
             
             if ($has_submenu) {
                 // Stránka s podmenu
                 $submenu_active = false;
-                foreach ($sub_pages[$page['slug']] as $sub_page) {
-                    if ($current_slug === $sub_page['slug']) {
-                        $submenu_active = true;
-                        break;
+                if (!empty($current_slug)) {
+                    foreach ($sub_pages[$page['slug']] as $sub_page) {
+                        if ($current_slug === $sub_page['slug']) {
+                            $submenu_active = true;
+                            break;
+                        }
                     }
                 }
                 
-                // Pouze pokud je aktivní tato konkrétní stránka nebo její podstránka
-                $active_class = ($is_active || $submenu_active) ? ' active' : '';
+                // Také aktivní když current_parent_slug odpovídá tomuto dropdownu
+                $is_parent_active = (!empty($current_parent_slug) && $current_parent_slug === $page['slug']);
+                
+                // Aktivní pokud: 1) je to přesně tato stránka, 2) je aktivní její podstránka, 3) parent_slug ukazuje sem
+                $active_class = ($is_active || $submenu_active || $is_parent_active) ? ' active' : '';
                 
                 $menu_html .= '<li class="nav-item dropdown">';
                 $menu_html .= '<a class="nav-link dropdown-toggle' . $active_class . '" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">';
@@ -95,7 +101,7 @@ function generateBootstrapMenu($pdo, $current_slug) {
                 $menu_html .= '</li>';
             } else {
                 // Jednoduchá stránka - pouze aktivní pokud je to přesně tato stránka
-                $active_class = ($current_slug === $page['slug']) ? ' active' : '';
+                $active_class = (!empty($current_slug) && $current_slug === $page['slug']) ? ' active' : '';
                 $menu_html .= '<li class="nav-item">';
                 $menu_html .= '<a class="nav-link' . $active_class . '" href="page_new.php?slug=' . htmlspecialchars($page['slug']) . '">';
                 $menu_html .= htmlspecialchars($page['title']);

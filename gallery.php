@@ -410,7 +410,14 @@ $meta_description = 'Galerie fotografií okolí Antošovic - příroda, památky
                     <ul class="list-unstyled">
                         <li><a href="index.php">Domů</a></li>
                         <li><a href="events.php">Akce</a></li>
-                        <li><a href="gallery.php">Fotky okolí</a></li>
+                        <?php 
+                        try {
+                            $photo_check = $pdo->query("SELECT COUNT(*) FROM gallery_photos WHERE is_published = 1");
+                            if ($photo_check && $photo_check->fetchColumn() > 0): ?>
+                                <li><a href="gallery.php">Fotky okolí</a></li>
+                        <?php endif;
+                        } catch (Exception $e) {}
+                        ?>
                         <?php if (!empty($quickLinks)): ?>
                             <?php foreach ($quickLinks as $link): ?>
                                 <li><a href="<?= htmlspecialchars($link['url']) ?>" 

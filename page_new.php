@@ -48,7 +48,7 @@ try {
     $subpages = [];
     $parent_page = null;
     
-    if ($page['has_sidebar_menu'] == 1) {
+    if (isset($page['has_sidebar_menu']) && $page['has_sidebar_menu'] == 1) {
         // Tato stránka má boční menu - načti její podstránky
         $stmt = $pdo->prepare("SELECT title, slug, created_at FROM pages WHERE parent_slug = ? AND is_published = 1 ORDER BY title ASC");
         $stmt->execute([$page['slug']]);
@@ -72,8 +72,9 @@ try {
     exit;
 }
 
-// Načíst menu
-$menu = generateBootstrapMenu($pdo, $slug);
+// Načíst menu - předat i parent_slug pro správné označení dropdownu
+$current_parent_slug = $page['parent_slug'] ?? '';
+$menu = generateBootstrapMenu($pdo, $slug, $current_parent_slug);
 ?>
 <!DOCTYPE html>
 <html lang="cs">
@@ -539,7 +540,7 @@ $menu = generateBootstrapMenu($pdo, $slug);
     <section class="main-content">
         <div class="container">
             <?php 
-            $show_sidebar = ($page['has_sidebar_menu'] == 1 && !empty($subpages)) || ($parent_page && !empty($subpages));
+            $show_sidebar = (isset($page['has_sidebar_menu']) && $page['has_sidebar_menu'] == 1 && !empty($subpages)) || ($parent_page && !empty($subpages));
             $menu_page = $parent_page ?: $page;
             ?>
             
@@ -624,7 +625,14 @@ $menu = generateBootstrapMenu($pdo, $slug);
                     <ul class="list-unstyled">
                         <li><a href="index.php">Domů</a></li>
                         <li><a href="events.php">Akce</a></li>
-                        <li><a href="gallery.php">Fotky okolí</a></li>
+                        <?php 
+                        try {
+                            $photo_check = $pdo->query("SELECT COUNT(*) FROM gallery_photos WHERE is_published = 1");
+                            if ($photo_check && $photo_check->fetchColumn() > 0): ?>
+                                <li><a href="gallery.php">Fotky okolí</a></li>
+                        <?php endif;
+                        } catch (Exception $e) {}
+                        ?>
                         <?php if (!empty($quickLinks)): ?>
                             <?php foreach ($quickLinks as $link): ?>
                                 <li><a href="<?= htmlspecialchars($link['url']) ?>" 
