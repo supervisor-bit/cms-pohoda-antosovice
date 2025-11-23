@@ -86,7 +86,7 @@ $menu = generateBootstrapMenu($pdo, '');
 
         /* Navbar */
         .navbar {
-            background: rgba(45, 80, 22, 0.95) !important;
+            background: #6f9183 !important;
             backdrop-filter: blur(10px);
             box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
             transition: all 0.3s ease;
@@ -104,6 +104,12 @@ $menu = generateBootstrapMenu($pdo, '');
         
         .navbar-brand i {
             font-size: 1.4rem !important;
+        }
+        
+        .navbar-logo {
+            height: 90px !important;
+            width: auto !important;
+            object-fit: contain !important;
         }
 
         .navbar-nav .nav-link {
@@ -512,7 +518,7 @@ $menu = generateBootstrapMenu($pdo, '');
     <nav class="navbar navbar-expand-lg sticky-top">
         <div class="container">
             <a class="navbar-brand" href="index.php">
-                <i class="fas fa-tree me-2"></i>
+                <img src="images/sno-logo.png" alt="SNO Logo" class="navbar-logo me-2">
                 <?= htmlspecialchars($settings['site_title'] ?? 'Pohoda Antošovice') ?>
             </a>
             
@@ -590,40 +596,6 @@ $menu = generateBootstrapMenu($pdo, '');
                         <?php endforeach; ?>
                     </div>
                     <?php endif; ?>
-                    
-                    <!-- Quick Links -->
-                    <div class="related-articles mt-4">
-                        <h3><i class="fas fa-link me-2"></i>Rychlé odkazy</h3>
-                        <?php if (!empty($quickLinks)): ?>
-                            <?php foreach ($quickLinks as $link): ?>
-                                <div class="related-article">
-                                    <a href="<?= htmlspecialchars($link['url']) ?>">
-                                        <h5><?= htmlspecialchars($link['title']) ?></h5>
-                                        <p class="text-muted small mb-1"><?= htmlspecialchars($link['description']) ?></p>
-                                    </a>
-                                </div>
-                            <?php endforeach; ?>
-                        <?php else: ?>
-                            <div class="related-article">
-                                <a href="page_new.php?slug=o-organizaci">
-                                    <h5>O organizaci</h5>
-                                    <p class="text-muted small mb-1">Zjistěte více o naší organizaci</p>
-                                </a>
-                            </div>
-                            <div class="related-article">
-                                <a href="page_new.php?slug=provozni-rad">
-                                    <h5>Provozní řád</h5>
-                                    <p class="text-muted small mb-1">Důležité informace a pravidla</p>
-                                </a>
-                            </div>
-                            <div class="related-article">
-                                <a href="page_new.php?slug=ubytovani-stravovani">
-                                    <h5>Ubytování a stravování</h5>
-                                    <p class="text-muted small mb-1">Informace o ubytování a stravování</p>
-                                </a>
-                            </div>
-                        <?php endif; ?>
-                    </div>
                 </div>
             </div>
         </div>
@@ -637,30 +609,7 @@ $menu = generateBootstrapMenu($pdo, '');
                     <h5><i class="fas fa-leaf me-2"></i><?= htmlspecialchars($settings['site_title'] ?? 'Pohoda Antošovice') ?></h5>
                     <p><?= htmlspecialchars($settings['site_description'] ?? 'Naturistický kemp - relaxace v harmonii s přírodou') ?></p>
                 </div>
-                <div class="col-md-3">
-                    <h6>Rychlé odkazy</h6>
-                    <ul class="list-unstyled">
-                        <li><a href="index.php">Domů</a></li>
-                        <li><a href="events.php">Akce</a></li>
-                        <?php 
-                        try {
-                            $photo_check = $pdo->query("SELECT COUNT(*) FROM gallery_photos WHERE is_published = 1");
-                            if ($photo_check && $photo_check->fetchColumn() > 0): ?>
-                                <li><a href="gallery.php">Fotky okolí</a></li>
-                        <?php endif;
-                        } catch (Exception $e) {}
-                        ?>
-                        <?php if (!empty($quickLinks)): ?>
-                            <?php foreach ($quickLinks as $link): ?>
-                                <li><a href="<?= htmlspecialchars($link['url']) ?>" 
-                                       title="<?= htmlspecialchars($link['description']) ?>"><?= htmlspecialchars($link['title']) ?></a></li>
-                            <?php endforeach; ?>
-                        <?php else: ?>
-                            <li><a href="page_new.php?slug=o-organizaci">O organizaci</a></li>
-                        <?php endif; ?>
-                    </ul>
-                </div>
-                <div class="col-md-3">
+                <div class="col-md-6">
                     <h6>Kontakt</h6>
                     <p><i class="fas fa-envelope me-2"></i><?= htmlspecialchars($settings['contact_email'] ?? 'info@pohoda-antosovice.cz') ?></p>
                     <p><i class="fas fa-phone me-2"></i><?= htmlspecialchars($settings['contact_phone'] ?? '+420 123 456 789') ?></p>

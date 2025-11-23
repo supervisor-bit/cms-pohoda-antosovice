@@ -110,7 +110,7 @@ $menu = generateBootstrapMenu($pdo, $slug, $current_parent_slug);
 
         /* Navbar */
         .navbar {
-            background: rgba(45, 80, 22, 0.95) !important;
+            background: #6f9183 !important;
             backdrop-filter: blur(10px);
             box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
             transition: all 0.3s ease;
@@ -128,6 +128,12 @@ $menu = generateBootstrapMenu($pdo, $slug, $current_parent_slug);
         
         .navbar-brand i {
             font-size: 1.4rem !important;
+        }
+        
+        .navbar-logo {
+            height: 90px !important;
+            width: auto !important;
+            object-fit: contain !important;
         }
 
         .navbar-nav .nav-link {
@@ -340,6 +346,55 @@ $menu = generateBootstrapMenu($pdo, $slug, $current_parent_slug);
             transform: translateY(-2px);
         }
         
+        /* Styly pro odkazy v obsahu stránky */
+        .content a {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 600;
+            border-bottom: 2px solid transparent;
+            transition: all 0.3s ease;
+        }
+        
+        .content a:hover {
+            color: var(--secondary-color);
+            border-bottom-color: var(--secondary-color);
+        }
+        
+        /* Přepsat Bootstrap styly pro tlačítka v obsahu */
+        .content .btn-primary,
+        .content a.btn-primary,
+        .content .btn.btn-primary,
+        .content a.btn.btn-primary {
+            background-color: var(--primary-color) !important;
+            background: var(--primary-color) !important;
+            border-color: var(--primary-color) !important;
+            color: white !important;
+            border-bottom: none !important;
+            padding: 0.5rem 1.5rem !important;
+            line-height: 1.5 !important;
+            vertical-align: middle !important;
+        }
+        
+        .content .btn-primary:hover,
+        .content a.btn-primary:hover,
+        .content .btn.btn-primary:hover,
+        .content a.btn.btn-primary:hover {
+            background-color: var(--secondary-color) !important;
+            background: var(--secondary-color) !important;
+            border-color: var(--secondary-color) !important;
+            color: white !important;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(45, 90, 57, 0.4);
+        }
+        
+        /* Zarovnání textu s tlačítky */
+        .content p {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+        
         /* Footer */
         footer {
             background: var(--primary-color);
@@ -495,6 +550,43 @@ $menu = generateBootstrapMenu($pdo, $slug, $current_parent_slug);
             order: 2 !important; /* Obsah napravo */
             min-width: 0 !important;
         }
+        
+        /* RESPONZIVNÍ DESIGN PRO MOBILNÍ ZAŘÍZENÍ */
+        @media (max-width: 991px) {
+            .page-with-sidebar {
+                flex-direction: column !important;
+                gap: 1rem !important;
+            }
+            
+            .sidebar-menu {
+                flex: 1 1 auto !important;
+                width: 100% !important;
+                position: relative !important;
+                top: 0 !important;
+                max-height: none !important;
+                order: 1 !important;
+            }
+            
+            .page-content-with-sidebar {
+                order: 2 !important;
+                width: 100% !important;
+            }
+            
+            .sidebar-nav {
+                display: flex !important;
+                flex-wrap: wrap !important;
+                gap: 0.5rem !important;
+            }
+            
+            .sidebar-nav-item {
+                flex: 0 0 auto !important;
+            }
+            
+            .sidebar-nav-item a {
+                padding: 0.5rem 1rem !important;
+                font-size: 0.9rem !important;
+            }
+        }
     </style>
 </head>
 <body>
@@ -502,7 +594,7 @@ $menu = generateBootstrapMenu($pdo, $slug, $current_parent_slug);
     <nav class="navbar navbar-expand-lg sticky-top">
         <div class="container">
             <a class="navbar-brand" href="index.php">
-                <i class="fas fa-tree me-2"></i>
+                <img src="images/sno-logo.png" alt="SNO Logo" class="navbar-logo me-2">
                 <?= htmlspecialchars($settings['site_title'] ?? 'Pohoda Antošovice') ?>
             </a>
             
@@ -620,30 +712,7 @@ $menu = generateBootstrapMenu($pdo, $slug, $current_parent_slug);
                     <h5><i class="fas fa-leaf me-2"></i><?= htmlspecialchars($settings['site_title'] ?? 'Pohoda Antošovice') ?></h5>
                     <p><?= htmlspecialchars($settings['site_description'] ?? 'Naturistický kemp - relaxace v harmonii s přírodou') ?></p>
                 </div>
-                <div class="col-md-3">
-                    <h6>Rychlé odkazy</h6>
-                    <ul class="list-unstyled">
-                        <li><a href="index.php">Domů</a></li>
-                        <li><a href="events.php">Akce</a></li>
-                        <?php 
-                        try {
-                            $photo_check = $pdo->query("SELECT COUNT(*) FROM gallery_photos WHERE is_published = 1");
-                            if ($photo_check && $photo_check->fetchColumn() > 0): ?>
-                                <li><a href="gallery.php">Fotky okolí</a></li>
-                        <?php endif;
-                        } catch (Exception $e) {}
-                        ?>
-                        <?php if (!empty($quickLinks)): ?>
-                            <?php foreach ($quickLinks as $link): ?>
-                                <li><a href="<?= htmlspecialchars($link['url']) ?>" 
-                                       title="<?= htmlspecialchars($link['description']) ?>"><?= htmlspecialchars($link['title']) ?></a></li>
-                            <?php endforeach; ?>
-                        <?php else: ?>
-                            <li><a href="page_new.php?slug=o-organizaci">O organizaci</a></li>
-                        <?php endif; ?>
-                    </ul>
-                </div>
-                <div class="col-md-3">
+                <div class="col-md-6">
                     <h6>Kontakt</h6>
                     <p><i class="fas fa-envelope me-2"></i><?= htmlspecialchars($settings['contact_email'] ?? 'info@pohoda-antosovice.cz') ?></p>
                     <p><i class="fas fa-phone me-2"></i><?= htmlspecialchars($settings['contact_phone'] ?? '+420 123 456 789') ?></p>
@@ -698,6 +767,36 @@ $menu = generateBootstrapMenu($pdo, $slug, $current_parent_slug);
                         }
                         e.preventDefault();
                     }
+                });
+            });
+            
+            // Automaticky otevřít Facebook odkazy v novém okně
+            document.querySelectorAll('.content a').forEach(function(link) {
+                const href = link.getAttribute('href');
+                // Zkontrolovat, jestli odkaz obsahuje facebook.com
+                if (href && (href.includes('facebook.com') || href.includes('fb.com') || href.includes('fb.me'))) {
+                    link.setAttribute('target', '_blank');
+                    link.setAttribute('rel', 'noopener noreferrer');
+                }
+            });
+            
+            // Přepsat barvu tlačítek v obsahu na zelenou
+            document.querySelectorAll('.content .btn-primary, .content a.btn-primary').forEach(function(btn) {
+                btn.style.setProperty('background-color', '#2d5016', 'important');
+                btn.style.setProperty('background', '#2d5016', 'important');
+                btn.style.setProperty('border-color', '#2d5016', 'important');
+                btn.style.setProperty('color', 'white', 'important');
+                
+                btn.addEventListener('mouseenter', function() {
+                    this.style.setProperty('background-color', '#4a7c59', 'important');
+                    this.style.setProperty('background', '#4a7c59', 'important');
+                    this.style.setProperty('border-color', '#4a7c59', 'important');
+                });
+                
+                btn.addEventListener('mouseleave', function() {
+                    this.style.setProperty('background-color', '#2d5016', 'important');
+                    this.style.setProperty('background', '#2d5016', 'important');
+                    this.style.setProperty('border-color', '#2d5016', 'important');
                 });
             });
         });

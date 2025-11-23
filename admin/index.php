@@ -163,19 +163,6 @@ include 'includes/admin_header.php';
                         </div>
                     </a>
                     
-                    <a href="quick_links.php" class="action-card">
-                        <div class="card-icon">
-                            <i class="fas fa-external-link-alt"></i>
-                        </div>
-                        <div class="card-content">
-                            <h3>Rychlé odkazy</h3>
-                            <p>Spravujte odkazy v patičce webu</p>
-                        </div>
-                        <div class="card-arrow">
-                            <i class="fas fa-arrow-right"></i>
-                        </div>
-                    </a>
-                    
                     <button type="button" class="action-card" data-bs-toggle="modal" data-bs-target="#helpModal">
                         <div class="card-icon help">
                             <i class="fas fa-question-circle"></i>

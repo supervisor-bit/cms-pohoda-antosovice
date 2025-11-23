@@ -29,10 +29,14 @@ try {
         'instagram_url' => ''
     ], $settings);
     
-    // Načtení nejnovějších příspěvků
-    $stmt = $pdo->prepare("SELECT title, slug, excerpt, featured_image, created_at FROM posts WHERE is_published = 1 ORDER BY created_at DESC LIMIT 6");
+    // Načtení nejnovějšího příspěvku (pouze 1 pro homepage)
+    $stmt = $pdo->prepare("SELECT title, slug, excerpt, content, featured_image, created_at FROM posts WHERE is_published = 1 ORDER BY created_at DESC LIMIT 1");
     $stmt->execute();
     $posts = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    
+    // Zjistit celkový počet příspěvků pro tlačítko "Zobrazit více"
+    $totalPostsStmt = $pdo->query("SELECT COUNT(*) FROM posts WHERE is_published = 1");
+    $totalPosts = $totalPostsStmt->fetchColumn();
     
     // Načtení nadcházejících akcí
     try {
@@ -121,7 +125,7 @@ try {
 
         /* Navbar */
         .navbar {
-            background: rgba(45, 80, 22, 0.95) !important;
+            background: #6f9183 !important;
             backdrop-filter: blur(10px);
             box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
             transition: all 0.3s ease;
@@ -139,6 +143,12 @@ try {
         
         .navbar-brand i {
             font-size: 1.4rem !important;
+        }
+        
+        .navbar-logo {
+            height: 90px !important;
+            width: auto !important;
+            object-fit: contain !important;
         }
 
         .navbar-nav .nav-link {
@@ -479,7 +489,7 @@ try {
     <nav class="navbar navbar-expand-lg navbar-dark sticky-top">
         <div class="container">
             <a class="navbar-brand" href="index.php">
-                <i class="fas fa-tree me-2"></i>
+                <img src="images/sno-logo.png" alt="SNO Logo" class="navbar-logo me-2">
                 <?= htmlspecialchars($settings['site_title'] ?? 'Pohoda Antošovice') ?>
             </a>
             
@@ -502,9 +512,6 @@ try {
                 <h1 class="display-4 mb-3"><?= htmlspecialchars($settings['site_title'] ?? 'Pohoda Antošovice') ?></h1>
                 <p class="lead mb-4"><?= htmlspecialchars($settings['site_description'] ?? 'Naturistický kemp - relaxace v harmonii s přírodou') ?></p>
                 <div class="mt-4">
-                    <a href="page_new.php?slug=vice-informaci" class="btn btn-primary btn-lg me-3">
-                        <i class="fas fa-info-circle me-2"></i>Více informací
-                    </a>
                     <a href="page_new.php?slug=kontakt" class="btn btn-outline-light btn-lg me-3">
                         <i class="fas fa-envelope me-2"></i>Kontakt
                     </a>
@@ -532,11 +539,60 @@ try {
                     <div class="content-section">
                         <h2 class="section-title">Nejnovější novinky</h2>
                         <div class="row g-4">
-                            <?php if (empty($posts)): ?>
+                            <!-- Články z databáze - zobrazit jako první -->
+                            <?php if (!empty($posts)): ?>
+                            <?php foreach ($posts as $post): ?>
+                            <div class="col-md-12 mb-4">
+                                <div class="content-card">
+                                    <div class="row g-0">
+                                        <?php if ($post['featured_image']): ?>
+                                        <div class="col-md-4">
+                                            <img src="<?= htmlspecialchars($post['featured_image']) ?>" class="img-fluid rounded-start h-100" style="object-fit: cover;" alt="<?= htmlspecialchars($post['title']) ?>">
+                                        </div>
+                                        <div class="col-md-8">
+                                        <?php else: ?>
+                                        <div class="col-md-12">
+                                        <?php endif; ?>
+                                            <div class="card-body">
+                                                <h4 class="card-title"><?= htmlspecialchars($post['title']) ?></h4>
+                                                <p class="text-muted mb-2">
+                                                    <i class="fas fa-calendar me-1"></i>
+                                                    <?= date('j.n.Y', strtotime($post['created_at'])) ?>
+                                                </p>
+                                                <div class="card-text">
+                                                    <?php 
+                                                    // Zobrazit prvních 400 znaků z content (včetně HTML)
+                                                    $content = strip_tags($post['content']);
+                                                    $preview = mb_substr($content, 0, 400);
+                                                    echo nl2br(htmlspecialchars($preview));
+                                                    if (mb_strlen($content) > 400) echo '...';
+                                                    ?>
+                                                </div>
+                                                <a href="post_new.php?slug=<?= htmlspecialchars($post['slug']) ?>" class="btn btn-primary mt-3">
+                                                    <i class="fas fa-arrow-right me-2"></i>Číst více
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <?php endforeach; ?>
+                            
+                            <!-- Tlačítko "Zobrazit všechny články" pokud jich je víc než 1 -->
+                            <?php if ($totalPosts > 1): ?>
+                            <div class="col-12 text-center mb-4">
+                                <a href="posts.php" class="btn btn-primary btn-lg">
+                                    <i class="fas fa-newspaper me-2"></i>Zobrazit všechny články (<?= $totalPosts ?>)
+                                </a>
+                            </div>
+                            <?php endif; ?>
+                            <?php endif; ?>
+                            
+                            <!-- Statické karty - zobrazit po článcích -->
                             <div class="col-md-4">
                                 <div class="content-card">
-                                    <h5>Vítejte v našem kempu</h5>
-                                    <p>Jsme rádi, že jste navštívili naše stránky. Náš naturistický kemp nabízí jedinečný zážitek v souladu s přírodou.</p>
+                                    <h5>Naturistická lokalita Pohoda v Antošovicích</h5>
+                                    <p>Jsme rádi, že jste navštívili naše stránky. Naši lokalitu v Antošovicích jste již také navštívili? Ta totiž nabízí jedinečný zážitek v souladu s přírodou.</p>
                                     <a href="page_new.php?slug=vice-informaci" class="btn btn-primary">
                                         <i class="fas fa-arrow-right me-2"></i>Více informací
                                     </a>
@@ -570,30 +626,6 @@ try {
                                     </div>
                                 </div>
                             </div>
-                            <?php endif; ?>
-                            <?php else: ?>
-                            <?php foreach ($posts as $post): ?>
-                            <div class="col-md-6 mb-4">
-                                <div class="content-card h-100">
-                                    <?php if ($post['featured_image']): ?>
-                                    <img src="<?= htmlspecialchars($post['featured_image']) ?>" class="card-img-top" alt="<?= htmlspecialchars($post['title']) ?>">
-                                    <?php endif; ?>
-                                    <div class="card-body">
-                                        <h5 class="card-title"><?= htmlspecialchars($post['title']) ?></h5>
-                                        <p class="card-text"><?= htmlspecialchars($post['excerpt'] ?? '') ?></p>
-                                        <small class="text-muted">
-                                            <i class="fas fa-calendar me-1"></i>
-                                            <?= date('j.n.Y', strtotime($post['created_at'])) ?>
-                                        </small>
-                                    </div>
-                                    <div class="card-footer bg-transparent">
-                                        <a href="post_new.php?slug=<?= htmlspecialchars($post['slug']) ?>" class="btn btn-primary">
-                                            <i class="fas fa-arrow-right me-2"></i>Číst více
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-                            <?php endforeach; ?>
                             <?php endif; ?>
                         </div>
                     </div>
@@ -657,7 +689,7 @@ try {
                             </div>
                             
                             <div class="text-center mt-3">
-                                <a href="events.php" class="btn btn-outline-primary">
+                                <a href="events.php" class="btn btn-primary">
                                     <i class="fas fa-calendar me-2"></i>Všechny akce
                                 </a>
                             </div>
@@ -726,25 +758,6 @@ try {
                         </div>
                     </div>
                     <?php endif; ?>
-
-                    <!-- Quick links widget -->
-                    <?php if (!empty($quickLinks)): ?>
-                    <div class="sidebar-widget">
-                        <h3 class="widget-title">
-                            <i class="fas fa-external-link-alt me-2"></i>Rychlé odkazy
-                        </h3>
-                        <div class="quick-links-widget">
-                            <?php foreach ($quickLinks as $link): ?>
-                                <a href="<?= htmlspecialchars($link['url']) ?>" 
-                                   class="quick-link-item" 
-                                   title="<?= htmlspecialchars($link['description'] ?? '') ?>">
-                                    <i class="fas fa-chevron-right me-2"></i>
-                                    <?= htmlspecialchars($link['title']) ?>
-                                </a>
-                            <?php endforeach; ?>
-                        </div>
-                    </div>
-                    <?php endif; ?>
                 </div>
             </div>
         </div>
@@ -758,33 +771,7 @@ try {
                     <h5><i class="fas fa-leaf me-2"></i><?= htmlspecialchars($settings['site_title'] ?? 'Pohoda Antošovice') ?></h5>
                     <p><?= htmlspecialchars($settings['site_description'] ?? 'Naturistický kemp - relaxace v harmonii s přírodou') ?></p>
                 </div>
-                <div class="col-md-3">
-                    <h6>Rychlé odkazy</h6>
-                    <ul class="list-unstyled">
-                        <li><a href="index.php">Domů</a></li>
-                        <li><a href="events.php">Akce</a></li>
-                        <?php 
-                        // Zobrazit Fotky okolí pouze pokud existují publikované fotky
-                        try {
-                            $photo_check = $pdo->query("SELECT COUNT(*) FROM gallery_photos WHERE is_published = 1");
-                            if ($photo_check && $photo_check->fetchColumn() > 0): ?>
-                                <li><a href="gallery.php">Fotky okolí</a></li>
-                        <?php endif;
-                        } catch (Exception $e) { /* tabulka neexistuje */ }
-                        ?>
-                        <?php if (!empty($quickLinks)): ?>
-                            <?php foreach ($quickLinks as $link): ?>
-                                <li><a href="<?= htmlspecialchars($link['url']) ?>" 
-                                       title="<?= htmlspecialchars($link['description'] ?? '') ?>">
-                                    <?= htmlspecialchars($link['title']) ?>
-                                </a></li>
-                            <?php endforeach; ?>
-                        <?php else: ?>
-                            <li><a href="page_new.php?slug=o-organizaci">O organizaci</a></li>
-                        <?php endif; ?>
-                    </ul>
-                </div>
-                <div class="col-md-3">
+                <div class="col-md-6">
                     <h6>Kontakt</h6>
                     <?php if (!empty($settings['contact_email'])): ?>
                         <p><i class="fas fa-envelope me-2"></i><?= htmlspecialchars($settings['contact_email']) ?></p>

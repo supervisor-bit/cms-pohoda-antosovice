@@ -24,20 +24,6 @@ function generateBootstrapMenu($pdo, $current_slug, $current_parent_slug = '') {
         
         $menu_html = '';
         
-        // Domů odkaz
-        $home_active = ($current_slug === '' || $current_slug === 'home') ? ' active' : '';
-        $menu_html .= '<li class="nav-item">';
-        $menu_html .= '<a class="nav-link' . $home_active . '" href="index.php">';
-        $menu_html .= 'Domů</a>';
-        $menu_html .= '</li>';
-        
-        // Kalendář akcí odkaz
-        $events_active = ($current_slug === 'events') ? ' active' : '';
-        $menu_html .= '<li class="nav-item">';
-        $menu_html .= '<a class="nav-link' . $events_active . '" href="events.php">';
-        $menu_html .= 'Akce</a>';
-        $menu_html .= '</li>';
-        
         // Galerie fotek odkaz - pouze pokud existují publikované fotky
         try {
             $photo_check = $pdo->query("SELECT COUNT(*) FROM gallery_photos WHERE is_published = 1");
@@ -110,14 +96,29 @@ function generateBootstrapMenu($pdo, $current_slug, $current_parent_slug = '') {
             }
         }
         
+        // Kalendář akcí odkaz
+        $events_active = ($current_slug === 'events') ? ' active' : '';
+        $menu_html .= '<li class="nav-item">';
+        $menu_html .= '<a class="nav-link' . $events_active . '" href="events.php">';
+        $menu_html .= 'Naše akce</a>';
+        $menu_html .= '</li>';
+        
+        // Domů odkaz - na konci menu
+        $home_active = ($current_slug === '' || $current_slug === 'home') ? ' active' : '';
+        $menu_html .= '<li class="nav-item">';
+        $menu_html .= '<a class="nav-link' . $home_active . '" href="index.php">';
+        $menu_html .= 'Domů</a>';
+        $menu_html .= '</li>';
+        
         return $menu_html;
         
     } catch (Exception $e) {
         // Fallback menu pokud selže databáze
-        return '<li class="nav-item"><a class="nav-link" href="index.php">Domů</a></li>' .
-               '<li class="nav-item"><a class="nav-link" href="events.php">Akce</a></li>' .
-               '<li class="nav-item"><a class="nav-link" href="gallery.php">Fotky okolí</a></li>' .
-               '<li class="nav-item"><a class="nav-link" href="page_new.php?slug=kontakt">Kontakt</a></li>';
+        return '<li class="nav-item"><a class="nav-link" href="page_new.php?slug=poslani">Poslání</a></li>' .
+               '<li class="nav-item"><a class="nav-link" href="page_new.php?slug=o-organizaci">Organizace</a></li>' .
+               '<li class="nav-item"><a class="nav-link" href="page_new.php?slug=kontakt">Kontakt</a></li>' .
+               '<li class="nav-item"><a class="nav-link" href="events.php">Naše akce</a></li>' .
+               '<li class="nav-item"><a class="nav-link" href="index.php">Domů</a></li>';
     }
 }
 

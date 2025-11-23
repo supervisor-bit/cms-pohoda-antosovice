@@ -78,12 +78,6 @@ $current_page = basename($_SERVER['PHP_SELF'], '.php');
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a href="quick_links.php" class="nav-link <?= $current_page === 'quick_links' ? 'active' : '' ?>">
-                            <i class="fas fa-external-link-alt"></i>
-                            <span class="nav-text">Rychlé odkazy</span>
-                        </a>
-                    </li>
-                    <li class="nav-item">
                         <a href="profile.php" class="nav-link <?= $current_page === 'profile' ? 'active' : '' ?>">
                             <i class="fas fa-user-cog"></i>
                             <span class="nav-text">Profil</span>

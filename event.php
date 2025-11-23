@@ -123,7 +123,7 @@ try {
 
         /* Navbar styling (zkopírované z hlavní stránky) */
         .navbar {
-            background: rgba(45, 80, 22, 0.95) !important;
+            background: #6f9183 !important;
             backdrop-filter: blur(10px);
             box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
             transition: all 0.3s ease;
@@ -137,6 +137,12 @@ try {
             display: flex !important;
             align-items: center !important;
             margin-right: 2rem !important;
+        }
+        
+        .navbar-logo {
+            height: 90px !important;
+            width: auto !important;
+            object-fit: contain !important;
         }
 
         .navbar-nav .nav-link {
@@ -423,7 +429,7 @@ try {
     <nav class="navbar navbar-expand-lg navbar-dark sticky-top">
         <div class="container">
             <a class="navbar-brand" href="index.php">
-                <i class="fas fa-tree me-2"></i>
+                <img src="images/sno-logo.png" alt="SNO Logo" class="navbar-logo me-2">
                 <?= htmlspecialchars($settings['site_title'] ?? 'Pohoda Antošovice') ?>
             </a>
             
@@ -748,30 +754,7 @@ try {
                     <h5><i class="fas fa-leaf me-2"></i><?= htmlspecialchars($settings['site_title'] ?? 'Pohoda Antošovice') ?></h5>
                     <p><?= htmlspecialchars($settings['site_description'] ?? 'Naturistický kemp - relaxace v harmonii s přírodou') ?></p>
                 </div>
-                <div class="col-md-3">
-                    <h6>Rychlé odkazy</h6>
-                    <ul class="list-unstyled">
-                        <li><a href="index.php">Domů</a></li>
-                        <li><a href="events.php">Akce</a></li>
-                        <?php 
-                        try {
-                            $photo_check = $pdo->query("SELECT COUNT(*) FROM gallery_photos WHERE is_published = 1");
-                            if ($photo_check && $photo_check->fetchColumn() > 0): ?>
-                                <li><a href="gallery.php">Fotky okolí</a></li>
-                        <?php endif;
-                        } catch (Exception $e) {}
-                        ?>
-                        <?php if (!empty($quickLinks)): ?>
-                            <?php foreach ($quickLinks as $link): ?>
-                                <li><a href="<?= htmlspecialchars($link['url']) ?>" 
-                                       title="<?= htmlspecialchars($link['description']) ?>"><?= htmlspecialchars($link['title']) ?></a></li>
-                            <?php endforeach; ?>
-                        <?php else: ?>
-                            <li><a href="page_new.php?slug=o-organizaci">O organizaci</a></li>
-                        <?php endif; ?>
-                    </ul>
-                </div>
-                <div class="col-md-3">
+                <div class="col-md-6">
                     <h6>Kontakt</h6>
                     <?php if (!empty($settings['contact_email'])): ?>
                         <p><i class="fas fa-envelope me-2"></i><?= htmlspecialchars($settings['contact_email']) ?></p>
