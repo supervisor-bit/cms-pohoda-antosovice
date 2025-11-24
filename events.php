@@ -98,7 +98,7 @@ try {
     
     <style>
         :root {
-            --primary-color: #2d5016;      /* Zemitá zelená */
+            --primary-color: #6f9183;      /* Zemitá zelená */
             --secondary-color: #4a7c59;    /* Lesní zelená */
             --accent-color: #6b8e23;       /* Olivová zelená */
             --text-dark: #2c3e50;
@@ -121,6 +121,12 @@ try {
             transition: all 0.3s ease;
         }
 
+        .navbar .container {
+            padding-left: 0 !important;
+            padding-right: 0 !important;
+            margin-left: 0 !important;
+        }
+
         .navbar-brand {
             font-weight: 700 !important;
             font-size: 1.4rem !important;
@@ -128,7 +134,9 @@ try {
             text-decoration: none !important;
             display: flex !important;
             align-items: center !important;
-            margin-right: 2rem !important;
+            margin-right: 0.3rem !important;
+            margin-left: 0 !important;
+            padding-left: 0.3rem !important;
         }
         
         .navbar-brand i {
@@ -148,56 +156,29 @@ try {
             transition: all 0.3s ease;
             border-radius: 8px;
             margin: 0 3px;
-            position: relative;
             text-transform: uppercase;
             font-size: 0.9rem;
             letter-spacing: 0.5px;
-            background: rgba(255,255,255,0.05);
-            overflow: hidden;
-        }
-        
-        .navbar-nav .nav-item:nth-child(odd) .nav-link {
-            background: rgba(255,255,255,0.08);
-        }
-        
-        .navbar-nav .nav-item:nth-child(even) .nav-link {
-            background: rgba(0,0,0,0.08);
-        }
-        
-        .navbar-nav .nav-link:before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
-            transition: left 0.5s ease;
-        }
-        
-        .navbar-nav .nav-link:hover:before {
-            left: 100%;
+            background: transparent !important;
         }
         
         .navbar-nav .nav-link:hover {
             color: white !important;
-            background: rgba(255,255,255,0.25) !important;
-            transform: translateY(-1px);
-            box-shadow: 0 4px 15px rgba(255,255,255,0.1);
+            background: rgba(255,255,255,0.15) !important;
         }
         
         .navbar-nav .nav-link.active {
             color: white !important;
-            background: rgba(255,255,255,0.3) !important;
+            background: rgba(255,255,255,0.2) !important;
             font-weight: 600;
             box-shadow: 0 4px 20px rgba(255,255,255,0.15);
         }
 
         /* Page header */
         .page-header {
-            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            background: #6f9183 !important;
             color: white;
-            padding: 6rem 0 4rem;
+            padding: 4rem 0 3rem;
             position: relative;
             overflow: hidden;
         }
@@ -238,14 +219,14 @@ try {
             left: 0;
             right: 0;
             height: 4px;
-            background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
+            background: linear-gradient(90deg, #6f9183, var(--accent-color));
             border-radius: 20px 20px 0 0;
         }
 
         .filter-btn {
             background: rgba(45, 80, 22, 0.1);
             border: 2px solid rgba(45, 80, 22, 0.2);
-            color: var(--primary-color);
+            color: #6f9183;
             padding: 0.5rem 1rem;
             border-radius: 25px;
             text-decoration: none;
@@ -257,8 +238,8 @@ try {
         }
 
         .filter-btn:hover, .filter-btn.active {
-            background: var(--primary-color);
-            border-color: var(--primary-color);
+            background: #6f9183;
+            border-color: #6f9183;
             color: white;
             transform: translateY(-2px);
             box-shadow: 0 4px 15px rgba(45, 80, 22, 0.3);
@@ -267,21 +248,22 @@ try {
 
         /* Primary buttons */
         .btn-primary {
-            background: var(--primary-color);
-            border-color: var(--primary-color);
+            background: #6f9183 !important;
+            border: 2px solid #6f9183 !important;
             padding: 0.75rem 2rem;
             border-radius: 25px;
             font-weight: 600;
             text-transform: uppercase;
             letter-spacing: 0.5px;
             transition: all 0.3s ease;
+            color: white !important;
         }
 
         .btn-primary:hover {
-            background: var(--secondary-color);
-            border-color: var(--secondary-color);
+            background: #5a7a6b !important;
+            border-color: #5a7a6b !important;
             transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(45, 80, 22, 0.3);
+            color: white !important;
         }
 
         /* Event cards */
@@ -305,7 +287,7 @@ try {
             left: 0;
             right: 0;
             height: 4px;
-            background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
+            background: linear-gradient(90deg, #6f9183, var(--accent-color));
         }
 
         .event-card:hover {
@@ -314,7 +296,7 @@ try {
         }
 
         .event-date-badge {
-            background: var(--primary-color);
+            background: #6f9183;
             color: white;
             border-radius: 12px;
             padding: 1rem;
@@ -361,11 +343,11 @@ try {
         .event-meta i {
             width: 16px;
             margin-right: 0.5rem;
-            color: var(--primary-color);
+            color: #6f9183;
         }
 
         .event-title {
-            color: var(--primary-color);
+            color: #6f9183;
             font-weight: 600;
             margin: 1rem 0;
             font-size: 1.3rem;
@@ -382,8 +364,8 @@ try {
         }
 
         .btn-event {
-            background: var(--primary-color);
-            border: var(--primary-color);
+            background: #6f9183;
+            border: #6f9183;
             color: white;
             padding: 0.75rem 1.5rem;
             border-radius: 25px;
@@ -396,8 +378,8 @@ try {
         }
 
         .btn-event:hover {
-            background: var(--secondary-color);
-            border-color: var(--secondary-color);
+            background: #5a7a6b;
+            border-color: #5a7a6b;
             color: white;
             transform: translateY(-2px);
             box-shadow: 0 8px 25px rgba(45, 80, 22, 0.3);
@@ -437,7 +419,7 @@ try {
 
         .event-item.active {
             background: rgba(45, 80, 22, 0.1);
-            border-left: 4px solid var(--primary-color);
+            border-left: 4px solid #6f9183;
             padding-left: 1rem;
         }
 
@@ -446,7 +428,7 @@ try {
         }
 
         .event-item:hover a h6 {
-            color: var(--primary-color);
+            color: #6f9183;
         }
 
         /* Empty state */
@@ -468,10 +450,10 @@ try {
 
         /* Footer */
         .footer {
-            background: var(--primary-color);
+            background: #6f9183 !important;
             color: white;
             padding: 3rem 0 2rem;
-            margin-top: 4rem;
+            margin-top: auto;
         }
 
         .footer h5 {
@@ -550,8 +532,8 @@ try {
             <!-- Filtry -->
             <div class="filters-section">
                 <h5 class="mb-3">
-                    <i class="fas fa-filter me-2" style="color: var(--primary-color);"></i>
-                    <span style="color: var(--primary-color); font-weight: 600;">Filtry</span>
+                    <i class="fas fa-filter me-2" style="color: #6f9183;"></i>
+                    <span style="color: #6f9183; font-weight: 600;">Filtry</span>
                 </h5>
                 
                 <div class="row">

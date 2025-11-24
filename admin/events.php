@@ -395,7 +395,7 @@ function createSlug($text) {
                                 </div>
                                 <div class="col-md-3">
                                     <label class="form-label">Barva</label>
-                                    <input type="color" class="form-control" name="category_color" value="#2d5016">
+                                    <input type="color" class="form-control" name="category_color" value="#6f9183">
                                 </div>
                                 <div class="col-md-3">
                                     <label class="form-label">Ikona (FontAwesome)</label>

@@ -11,6 +11,12 @@ if (empty($slug)) {
     exit;
 }
 
+// Speciální handling pro fotogalerii
+if ($slug === 'fotky-okoli') {
+    header('Location: gallery.php');
+    exit;
+}
+
 try {
     // Získat stránku z databáze
     $stmt = $pdo->prepare("SELECT * FROM pages WHERE slug = ? AND is_published = 1");
@@ -93,7 +99,7 @@ $menu = generateBootstrapMenu($pdo, $slug, $current_parent_slug);
     
     <style>
         :root {
-            --primary-color: #2d5016;      /* Zemitá zelená */
+            --primary-color: #6f9183;      /* Zemitá zelená */
             --secondary-color: #4a7c59;    /* Lesní zelená */
             --accent-color: #6b8e23;       /* Olivová zelená */
             --text-dark: #2c3e50;
@@ -116,6 +122,12 @@ $menu = generateBootstrapMenu($pdo, $slug, $current_parent_slug);
             transition: all 0.3s ease;
         }
 
+        .navbar .container {
+            padding-left: 0 !important;
+            padding-right: 0 !important;
+            margin-left: 0 !important;
+        }
+
         .navbar-brand {
             font-weight: 700 !important;
             font-size: 1.4rem !important;
@@ -123,7 +135,9 @@ $menu = generateBootstrapMenu($pdo, $slug, $current_parent_slug);
             text-decoration: none !important;
             display: flex !important;
             align-items: center !important;
-            margin-right: 2rem !important;
+            margin-right: 0.3rem !important;
+            margin-left: 0 !important;
+            padding-left: 0.3rem !important;
         }
         
         .navbar-brand i {
@@ -143,51 +157,21 @@ $menu = generateBootstrapMenu($pdo, $slug, $current_parent_slug);
             transition: all 0.3s ease;
             border-radius: 8px;
             margin: 0 3px;
-            position: relative;
             text-transform: uppercase;
             font-size: 0.9rem;
             letter-spacing: 0.5px;
-            background: rgba(255,255,255,0.05);
-            overflow: hidden;
-        }
-        
-        /* Striped efekt pro navigation */
-        .navbar-nav .nav-item:nth-child(odd) .nav-link {
-            background: rgba(255,255,255,0.08);
-        }
-        
-        .navbar-nav .nav-item:nth-child(even) .nav-link {
-            background: rgba(0,0,0,0.08);
-        }
-        
-        /* Shimmer efekt při hover */
-        .navbar-nav .nav-link:before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
-            transition: left 0.5s ease;
-        }
-        
-        .navbar-nav .nav-link:hover:before {
-            left: 100%;
+            background: transparent !important;
         }
         
         .navbar-nav .nav-link:hover {
             color: white !important;
-            background: rgba(255,255,255,0.25) !important;
-            transform: translateY(-1px);
-            box-shadow: 0 4px 15px rgba(255,255,255,0.1);
+            background: rgba(255,255,255,0.15) !important;
         }
         
         .navbar-nav .nav-link.active {
             color: white !important;
-            background: rgba(255,255,255,0.3) !important;
+            background: rgba(255,255,255,0.2) !important;
             font-weight: 600;
-            box-shadow: 0 4px 20px rgba(255,255,255,0.15);
         }
         
         /* Dropdown menu - Mobile friendly */
@@ -212,7 +196,7 @@ $menu = generateBootstrapMenu($pdo, $slug, $current_parent_slug);
         
         .dropdown-item:hover,
         .dropdown-item:focus {
-            background: var(--primary-color) !important;
+            background: #6f9183 !important;
             color: white !important;
             transform: translateX(3px);
         }
@@ -239,7 +223,7 @@ $menu = generateBootstrapMenu($pdo, $slug, $current_parent_slug);
 
         /* Page Header */
         .page-header {
-            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            background: #6f9183 !important;
             color: white;
             padding: 6rem 0 4rem;
             position: relative;
@@ -292,12 +276,12 @@ $menu = generateBootstrapMenu($pdo, $slug, $current_parent_slug);
             left: 0;
             right: 0;
             height: 4px;
-            background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
+            background: linear-gradient(90deg, #6f9183, var(--accent-color));
             border-radius: 20px 20px 0 0;
         }
         
         .content-card h1, .content-card h2 {
-            color: var(--primary-color);
+            color: #6f9183;
             margin-bottom: 1.5rem;
         }
         
@@ -325,30 +309,32 @@ $menu = generateBootstrapMenu($pdo, $slug, $current_parent_slug);
         }
         
         .btn-primary {
-            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-            border: none;
-            color: white;
+            background: #6f9183 !important;
+            border: 2px solid #6f9183 !important;
+            color: white !important;
         }
         
         .btn-primary:hover {
+            background: #5a7a6b !important;
+            border-color: #5a7a6b !important;
             transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(45, 90, 57, 0.4);
+            color: white !important;
         }
         
         .btn-outline-primary {
-            border: 2px solid var(--primary-color);
-            color: var(--primary-color);
+            border: 2px solid #6f9183;
+            color: #6f9183;
         }
         
         .btn-outline-primary:hover {
-            background: var(--primary-color);
+            background: #6f9183 !important;
             color: white;
             transform: translateY(-2px);
         }
         
         /* Styly pro odkazy v obsahu stránky */
         .content a {
-            color: var(--primary-color);
+            color: #6f9183;
             text-decoration: none;
             font-weight: 600;
             border-bottom: 2px solid transparent;
@@ -356,8 +342,8 @@ $menu = generateBootstrapMenu($pdo, $slug, $current_parent_slug);
         }
         
         .content a:hover {
-            color: var(--secondary-color);
-            border-bottom-color: var(--secondary-color);
+            color: #5a7a6b;
+            border-bottom-color: #5a7a6b;
         }
         
         /* Přepsat Bootstrap styly pro tlačítka v obsahu */
@@ -365,9 +351,9 @@ $menu = generateBootstrapMenu($pdo, $slug, $current_parent_slug);
         .content a.btn-primary,
         .content .btn.btn-primary,
         .content a.btn.btn-primary {
-            background-color: var(--primary-color) !important;
-            background: var(--primary-color) !important;
-            border-color: var(--primary-color) !important;
+            background-color: #6f9183 !important;
+            background: #6f9183 !important;
+            border-color: #6f9183 !important;
             color: white !important;
             border-bottom: none !important;
             padding: 0.5rem 1.5rem !important;
@@ -379,12 +365,11 @@ $menu = generateBootstrapMenu($pdo, $slug, $current_parent_slug);
         .content a.btn-primary:hover,
         .content .btn.btn-primary:hover,
         .content a.btn.btn-primary:hover {
-            background-color: var(--secondary-color) !important;
-            background: var(--secondary-color) !important;
-            border-color: var(--secondary-color) !important;
+            background-color: #5a7a6b !important;
+            background: #5a7a6b !important;
+            border-color: #5a7a6b !important;
             color: white !important;
             transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(45, 90, 57, 0.4);
         }
         
         /* Zarovnání textu s tlačítky */
@@ -397,7 +382,7 @@ $menu = generateBootstrapMenu($pdo, $slug, $current_parent_slug);
         
         /* Footer */
         footer {
-            background: var(--primary-color);
+            background: #6f9183 !important;
             color: rgba(255, 255, 255, 0.9);
             padding: 40px 0 20px;
             margin-top: 80px;
@@ -782,9 +767,9 @@ $menu = generateBootstrapMenu($pdo, $slug, $current_parent_slug);
             
             // Přepsat barvu tlačítek v obsahu na zelenou
             document.querySelectorAll('.content .btn-primary, .content a.btn-primary').forEach(function(btn) {
-                btn.style.setProperty('background-color', '#2d5016', 'important');
-                btn.style.setProperty('background', '#2d5016', 'important');
-                btn.style.setProperty('border-color', '#2d5016', 'important');
+                btn.style.setProperty('background-color', '#6f9183', 'important');
+                btn.style.setProperty('background', '#6f9183', 'important');
+                btn.style.setProperty('border-color', '#6f9183', 'important');
                 btn.style.setProperty('color', 'white', 'important');
                 
                 btn.addEventListener('mouseenter', function() {
@@ -794,9 +779,9 @@ $menu = generateBootstrapMenu($pdo, $slug, $current_parent_slug);
                 });
                 
                 btn.addEventListener('mouseleave', function() {
-                    this.style.setProperty('background-color', '#2d5016', 'important');
-                    this.style.setProperty('background', '#2d5016', 'important');
-                    this.style.setProperty('border-color', '#2d5016', 'important');
+                    this.style.setProperty('background-color', '#6f9183', 'important');
+                    this.style.setProperty('background', '#6f9183', 'important');
+                    this.style.setProperty('border-color', '#6f9183', 'important');
                 });
             });
         });

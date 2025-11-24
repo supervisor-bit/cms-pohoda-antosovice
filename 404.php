@@ -70,7 +70,7 @@ try {
     
     <style>
         :root {
-            --primary-color: #2d5016;      /* Zemitá zelená */
+            --primary-color: #6f9183;      /* Zemitá zelená */
             --secondary-color: #4a7c59;    /* Lesní zelená */
             --accent-color: #6b8e23;       /* Olivová zelená */
             --text-dark: #2c3e50;
@@ -153,7 +153,7 @@ try {
 
         .error-icon {
             font-size: 6rem;
-            color: var(--primary-color);
+            color: #6f9183;
             margin-bottom: 2rem;
             animation: float 3s ease-in-out infinite;
         }
@@ -166,7 +166,7 @@ try {
         .error-code {
             font-size: 4rem;
             font-weight: bold;
-            color: var(--primary-color);
+            color: #6f9183;
             margin-bottom: 1rem;
         }
 
@@ -193,8 +193,8 @@ try {
         }
 
         .btn-primary-custom {
-            background: var(--primary-color);
-            border: 2px solid var(--primary-color);
+            background: #6f9183;
+            border: 2px solid #6f9183;
             color: white;
             padding: 12px 30px;
             border-radius: 25px;
@@ -210,8 +210,8 @@ try {
         }
 
         .btn-primary-custom:hover {
-            background: var(--secondary-color);
-            border-color: var(--secondary-color);
+            background: #5a7a6b;
+            border-color: #5a7a6b;
             transform: translateY(-2px);
             box-shadow: 0 8px 25px rgba(45, 80, 22, 0.3);
             color: white;
@@ -219,8 +219,8 @@ try {
 
         .btn-secondary-custom {
             background: transparent;
-            border: 2px solid var(--primary-color);
-            color: var(--primary-color);
+            border: 2px solid #6f9183;
+            color: #6f9183;
             padding: 10px 28px;
             border-radius: 25px;
             text-decoration: none;
@@ -235,7 +235,7 @@ try {
         }
 
         .btn-secondary-custom:hover {
-            background: var(--primary-color);
+            background: #6f9183;
             color: white;
             transform: translateY(-2px);
             box-shadow: 0 8px 25px rgba(45, 80, 22, 0.2);
@@ -248,13 +248,13 @@ try {
         }
 
         .helpful-links h5 {
-            color: var(--primary-color);
+            color: #6f9183;
             margin-bottom: 1.5rem;
             font-weight: 600;
         }
 
         .helpful-links a {
-            color: var(--primary-color);
+            color: #6f9183;
             text-decoration: none;
             margin: 0 1rem;
             font-weight: 500;
@@ -262,15 +262,15 @@ try {
         }
 
         .helpful-links a:hover {
-            color: var(--secondary-color);
+            color: #5a7a6b;
             text-decoration: underline;
         }
 
         /* Footer */
         .footer {
-            background: var(--primary-color);
+            background: #6f9183 !important;
             color: white;
-            padding: 2rem 0;
+            padding: 3rem 0 2rem;
             margin-top: auto;
         }
 

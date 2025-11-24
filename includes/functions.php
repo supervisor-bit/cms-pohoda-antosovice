@@ -87,22 +87,6 @@ function generateBootstrapMenu($pdo, $current_slug, $current_parent_slug = '') {
         $menu_html .= 'Naše akce</a>';
         $menu_html .= '</li>';
         
-        // Galerie fotek odkaz - pouze pokud existují publikované fotky
-        try {
-            $photo_check = $pdo->query("SELECT COUNT(*) FROM gallery_photos WHERE is_published = 1");
-            $photo_count = $photo_check->fetchColumn();
-            
-            if ($photo_count > 0) {
-                $gallery_active = ($current_slug === 'gallery') ? ' active' : '';
-                $menu_html .= '<li class="nav-item">';
-                $menu_html .= '<a class="nav-link' . $gallery_active . '" href="gallery.php">';
-                $menu_html .= 'Fotky okolí</a>';
-                $menu_html .= '</li>';
-            }
-        } catch (Exception $e) {
-            // Pokud tabulka neexistuje, odkaz nezobrazíme
-        }
-        
         // Domů odkaz - na konci menu
         $home_active = ($current_slug === '' || $current_slug === 'home') ? ' active' : '';
         $menu_html .= '<li class="nav-item">';
@@ -189,7 +173,7 @@ function displayPhotoGallery($pdo, $featured_only = false, $limit = null, $show_
     if ($show_title) {
         $title = $featured_only ? 'Hlavní fotky okolí' : 'Galerie fotek okolí';
         $html .= '<div class="mb-4">';
-        $html .= '<h2 class="text-center mb-4" style="color: var(--primary-color);">' . $title . '</h2>';
+        $html .= '<h2 class="text-center mb-4" style="color: #6f9183;">' . $title . '</h2>';
         $html .= '</div>';
     }
     

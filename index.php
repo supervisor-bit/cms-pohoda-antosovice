@@ -108,7 +108,7 @@ try {
     
     <style>
         :root {
-            --primary-color: #2d5016;      /* Zemitá zelená */
+            --primary-color: #6f9183;      /* Zemitá zelená */
             --secondary-color: #4a7c59;    /* Lesní zelená */
             --accent-color: #6b8e23;       /* Olivová zelená */
             --text-dark: #2c3e50;
@@ -131,6 +131,12 @@ try {
             transition: all 0.3s ease;
         }
 
+        .navbar .container {
+            padding-left: 0 !important;
+            padding-right: 0 !important;
+            margin-left: 0 !important;
+        }
+
         .navbar-brand {
             font-weight: 700 !important;
             font-size: 1.4rem !important;
@@ -138,7 +144,9 @@ try {
             text-decoration: none !important;
             display: flex !important;
             align-items: center !important;
-            margin-right: 2rem !important;
+            margin-right: 0.3rem !important;
+            margin-left: 0 !important;
+            padding-left: 0.3rem !important;
         }
         
         .navbar-brand i {
@@ -158,44 +166,15 @@ try {
             transition: all 0.3s ease;
             border-radius: 8px;
             margin: 0 3px;
-            position: relative;
             text-transform: uppercase;
             font-size: 0.9rem;
             letter-spacing: 0.5px;
-            background: rgba(255,255,255,0.05);
-            overflow: hidden;
-        }
-        
-        /* Striped efekt */
-        .navbar-nav .nav-item:nth-child(odd) .nav-link {
-            background: rgba(255,255,255,0.08);
-        }
-        
-        .navbar-nav .nav-item:nth-child(even) .nav-link {
-            background: rgba(0,0,0,0.08);
-        }
-        
-        /* Shimmer efekt */
-        .navbar-nav .nav-link:before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
-            transition: left 0.5s ease;
-        }
-        
-        .navbar-nav .nav-link:hover:before {
-            left: 100%;
+            background: transparent !important;
         }
         
         .navbar-nav .nav-link:hover {
             color: white !important;
-            background: rgba(255,255,255,0.25) !important;
-            transform: translateY(-1px);
-            box-shadow: 0 4px 15px rgba(255,255,255,0.1);
+            background: rgba(255,255,255,0.15) !important;
         }
         
         .navbar-nav .nav-link.active {
@@ -207,7 +186,7 @@ try {
 
         /* Page Header */
         .page-header {
-            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            background: #6f9183 !important;
             color: white;
             padding: 6rem 0 4rem;
             position: relative;
@@ -247,7 +226,7 @@ try {
         }
 
         .section-title {
-            color: var(--primary-color);
+            color: #6f9183;
             font-size: 2rem;
             font-weight: 700;
             margin-bottom: 2rem;
@@ -276,7 +255,7 @@ try {
             left: 0;
             right: 0;
             height: 4px;
-            background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
+            background: linear-gradient(90deg, #6f9183, var(--accent-color));
         }
 
         .content-card:hover {
@@ -285,21 +264,22 @@ try {
         }
 
         .btn-primary {
-            background: var(--primary-color);
-            border: var(--primary-color);
+            background: #6f9183 !important;
+            border: 2px solid #6f9183 !important;
             padding: 0.75rem 2rem;
             border-radius: 25px;
             font-weight: 600;
             text-transform: uppercase;
             letter-spacing: 0.5px;
             transition: all 0.3s ease;
+            color: white !important;
         }
 
         .btn-primary:hover {
-            background: var(--secondary-color);
-            border-color: var(--secondary-color);
+            background: #5a7a6b !important;
+            border-color: #5a7a6b !important;
             transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(45, 80, 22, 0.3);
+            color: white !important;
         }
 
         /* Sidebar widgets */
@@ -314,7 +294,7 @@ try {
         }
 
         .widget-title {
-            color: var(--primary-color);
+            color: #6f9183;
             font-size: 1.25rem;
             font-weight: 600;
             margin-bottom: 1.5rem;
@@ -346,7 +326,7 @@ try {
         }
 
         .event-date {
-            background: var(--primary-color);
+            background: #6f9183;
             color: white;
             border-radius: 8px;
             padding: 0.5rem;
@@ -385,7 +365,7 @@ try {
         }
 
         .event-title a:hover {
-            color: var(--primary-color);
+            color: #6f9183;
         }
 
         .event-time, .event-location {
@@ -438,14 +418,14 @@ try {
         }
 
         .quick-link-item:hover {
-            background: var(--primary-color);
+            background: #6f9183;
             color: white;
             transform: translateX(5px);
         }
 
         /* Footer */
         .footer {
-            background: var(--primary-color);
+            background: #6f9183 !important;
             color: white;
             padding: 3rem 0 2rem;
             margin-top: auto;

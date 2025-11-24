@@ -106,7 +106,7 @@ try {
     
     <style>
         :root {
-            --primary-color: #2d5016;      /* Zemitá zelená */
+            --primary-color: #6f9183;      /* Zemitá zelená */
             --secondary-color: #4a7c59;    /* Lesní zelená */
             --accent-color: #6b8e23;       /* Olivová zelená */
             --text-dark: #2c3e50;
@@ -129,6 +129,12 @@ try {
             transition: all 0.3s ease;
         }
 
+        .navbar .container {
+            padding-left: 0 !important;
+            padding-right: 0 !important;
+            margin-left: 0 !important;
+        }
+
         .navbar-brand {
             font-weight: 700 !important;
             font-size: 1.4rem !important;
@@ -136,7 +142,9 @@ try {
             text-decoration: none !important;
             display: flex !important;
             align-items: center !important;
-            margin-right: 2rem !important;
+            margin-right: 0.3rem !important;
+            margin-left: 0 !important;
+            padding-left: 0.3rem !important;
         }
         
         .navbar-logo {
@@ -171,7 +179,7 @@ try {
 
         /* Event header */
         .event-header {
-            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            background: linear-gradient(135deg, #6f9183, #5a7a6b);
             color: white;
             padding: 4rem 0 2rem;
             position: relative;
@@ -217,7 +225,7 @@ try {
             left: 0;
             right: 0;
             height: 4px;
-            background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
+            background: linear-gradient(90deg, #6f9183, var(--accent-color));
             border-radius: 20px 20px 0 0;
         }
 
@@ -248,7 +256,7 @@ try {
             width: 50px;
             height: 50px;
             border-radius: 50%;
-            background: var(--primary-color);
+            background: #6f9183;
             color: white;
             display: flex;
             align-items: center;
@@ -282,8 +290,8 @@ try {
 
         /* Buttons */
         .btn-primary {
-            background: var(--primary-color);
-            border: var(--primary-color);
+            background: #6f9183;
+            border: #6f9183;
             padding: 0.75rem 2rem;
             border-radius: 25px;
             font-weight: 600;
@@ -296,17 +304,16 @@ try {
         }
 
         .btn-primary:hover {
-            background: var(--secondary-color);
-            border-color: var(--secondary-color);
+            background: #5a7a6b;
+            border-color: #5a7a6b;
             transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(45, 80, 22, 0.3);
             color: white;
         }
 
         .btn-outline-primary {
             background: transparent;
-            border: 2px solid var(--primary-color);
-            color: var(--primary-color);
+            border: 2px solid #6f9183;
+            color: #6f9183;
             padding: 0.75rem 2rem;
             border-radius: 25px;
             font-weight: 600;
@@ -318,7 +325,7 @@ try {
         }
 
         .btn-outline-primary:hover {
-            background: var(--primary-color);
+            background: #6f9183;
             color: white;
             transform: translateY(-2px);
             box-shadow: 0 8px 25px rgba(45, 80, 22, 0.3);
@@ -336,7 +343,7 @@ try {
         }
 
         .widget-title {
-            color: var(--primary-color);
+            color: #6f9183;
             font-size: 1.25rem;
             font-weight: 600;
             margin-bottom: 1.5rem;
@@ -363,7 +370,7 @@ try {
         }
 
         .related-event-date {
-            background: var(--primary-color);
+            background: #6f9183;
             color: white;
             border-radius: 8px;
             padding: 0.5rem;
@@ -380,12 +387,12 @@ try {
         }
 
         .related-event-title a:hover {
-            color: var(--primary-color);
+            color: #6f9183;
         }
 
         /* Footer */
         .footer {
-            background: var(--primary-color);
+            background: #6f9183 !important;
             color: white;
             padding: 3rem 0 2rem;
             margin-top: auto;
@@ -505,7 +512,7 @@ try {
                 <div class="col-lg-8">
                     <!-- Event Information -->
                     <div class="content-card" style="position: relative;">
-                        <h2 style="color: var(--primary-color); margin-bottom: 2rem;">
+                        <h2 style="color: #6f9183; margin-bottom: 2rem;">
                             <i class="fas fa-info-circle me-2"></i>Podrobnosti o akci
                         </h2>
 
@@ -609,7 +616,7 @@ try {
                         <!-- Description -->
                         <?php if (!empty($event['description'])): ?>
                             <div class="mt-4">
-                                <h5 style="color: var(--primary-color);">
+                                <h5 style="color: #6f9183;">
                                     <i class="fas fa-align-left me-2"></i>Popis akce
                                 </h5>
                                 <div class="content">
@@ -621,7 +628,7 @@ try {
                         <!-- Detailed Content -->
                         <?php if (!empty($event['content'])): ?>
                             <div class="mt-4">
-                                <h5 style="color: var(--primary-color);">
+                                <h5 style="color: #6f9183;">
                                     <i class="fas fa-file-alt me-2"></i>Detailní informace
                                 </h5>
                                 <div class="content">
@@ -665,7 +672,7 @@ try {
                     <!-- Related Posts -->
                     <?php if (!empty($relatedPosts)): ?>
                         <div class="content-card" style="position: relative;">
-                            <h2 style="color: var(--primary-color); margin-bottom: 2rem;">
+                            <h2 style="color: #6f9183; margin-bottom: 2rem;">
                                 <i class="fas fa-newspaper me-2"></i>Související články
                             </h2>
                             

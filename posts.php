@@ -48,7 +48,7 @@ $menu = generateBootstrapMenu($pdo, $current_slug);
     
     <style>
         :root {
-            --primary-green: #2d5016;
+            --primary-green: #6f9183;
             --light-green: #97bc62;
             --accent-green: #6b9080;
             --text-dark: #2c3e50;
@@ -71,6 +71,12 @@ $menu = generateBootstrapMenu($pdo, $current_slug);
             transition: all 0.3s ease;
         }
 
+        .navbar .container {
+            padding-left: 0 !important;
+            padding-right: 0 !important;
+            margin-left: 0 !important;
+        }
+
         .navbar-brand {
             font-weight: 700 !important;
             font-size: 1.4rem !important;
@@ -78,7 +84,9 @@ $menu = generateBootstrapMenu($pdo, $current_slug);
             text-decoration: none !important;
             display: flex !important;
             align-items: center !important;
-            margin-right: 2rem !important;
+            margin-right: 0.3rem !important;
+            margin-left: 0 !important;
+            padding-left: 0.3rem !important;
         }
         
         .navbar-brand i {
@@ -95,41 +103,28 @@ $menu = generateBootstrapMenu($pdo, $current_slug);
             color: rgba(255,255,255,0.9) !important;
             font-weight: 500;
             padding: 0.7rem 1.2rem !important;
-            margin: 0 0.2rem;
+            margin: 0 3px;
             border-radius: 8px;
             transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
+            text-transform: uppercase;
+            font-size: 0.9rem;
+            letter-spacing: 0.5px;
+            background: transparent !important;
         }
 
-        .navbar-nav .nav-link:before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
-            transition: left 0.5s ease;
-        }
-
-        .navbar-nav .nav-link:hover:before {
-            left: 100%;
-        }
-
-        .navbar-nav .nav-item:nth-child(odd) .nav-link {
-            background: rgba(255,255,255,0.08);
-        }
-
-        .navbar-nav .nav-link:hover,
-        .navbar-nav .nav-link.active {
-            background: rgba(255,255,255,0.2) !important;
+        .navbar-nav .nav-link:hover {
             color: white !important;
-            transform: translateY(-2px);
+            background: rgba(255,255,255,0.15) !important;
+        }
+
+        .navbar-nav .nav-link.active {
+            color: white !important;
+            background: rgba(255,255,255,0.2) !important;
+            font-weight: 600;
         }
 
         .page-header {
-            background: linear-gradient(135deg, var(--primary-green) 0%, var(--light-green) 100%);
+            background: #6f9183 !important;
             color: white;
             padding: 3rem 0;
             margin-bottom: 2rem;
@@ -155,21 +150,22 @@ $menu = generateBootstrapMenu($pdo, $current_slug);
         }
 
         .btn-primary {
-            background: var(--primary-green);
-            border-color: var(--primary-green);
+            background: #6f9183 !important;
+            border: 2px solid #6f9183 !important;
             padding: 0.75rem 2rem;
             border-radius: 25px;
             font-weight: 600;
             text-transform: uppercase;
             letter-spacing: 0.5px;
             transition: all 0.3s ease;
+            color: white !important;
         }
 
         .btn-primary:hover {
-            background: var(--accent-green);
-            border-color: var(--accent-green);
+            background: #5a7a6b !important;
+            border-color: #5a7a6b !important;
             transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(45, 80, 22, 0.3);
+            color: white !important;
         }
 
         .article-content {
@@ -202,7 +198,7 @@ $menu = generateBootstrapMenu($pdo, $current_slug);
 
         .article-item.active {
             background: rgba(45, 80, 22, 0.1);
-            border-left: 4px solid var(--primary-green);
+            border-left: 4px solid #6f9183;
             padding-left: 1rem;
         }
 
@@ -211,11 +207,11 @@ $menu = generateBootstrapMenu($pdo, $current_slug);
         }
 
         .article-item:hover a h6 {
-            color: var(--primary-green);
+            color: #6f9183;
         }
 
         footer {
-            background: var(--primary-green);
+            background: #6f9183 !important;
             color: white;
             padding: 3rem 0 1rem;
             margin-top: 4rem;
