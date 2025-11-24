@@ -85,6 +85,16 @@ try {
             min-height: 100vh;
         }
 
+        /* Oprava kurzívy a zarovnání textu */
+        em, i {
+            font-style: italic;
+            vertical-align: baseline;
+        }
+
+        p {
+            display: block !important;
+        }
+
         /* Navbar */
         .navbar {
             background: rgba(45, 80, 22, 0.95) !important;

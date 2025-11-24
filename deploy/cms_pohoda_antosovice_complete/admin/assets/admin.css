@@ -1141,7 +1141,7 @@ body {
     font-size: 0.9rem;
     margin: 0.5rem 0;
     display: flex;
-    align-items: center;
+    align-items: baseline;
 }
 
 .page-slug {
@@ -1157,10 +1157,14 @@ body {
 .page-parent {
     color: #6c757d !important;
     font-style: italic;
+    line-height: 1;
+    vertical-align: baseline;
 }
 
 .page-date {
     color: #6c757d !important;
+    line-height: 1;
+    vertical-align: baseline;
 }
 
 .page-status {

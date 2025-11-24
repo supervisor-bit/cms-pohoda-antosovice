@@ -75,6 +75,16 @@ $meta_description = 'Galerie fotografií okolí Antošovic - příroda, památky
             min-height: 100vh;
         }
 
+        /* Oprava kurzívy a zarovnání textu */
+        em, i {
+            font-style: italic;
+            vertical-align: baseline;
+        }
+
+        p {
+            display: block !important;
+        }
+
         /* Navbar */
         .navbar {
             background: #6f9183 !important;

@@ -372,12 +372,25 @@ $menu = generateBootstrapMenu($pdo, $slug, $current_parent_slug);
             transform: translateY(-2px);
         }
         
-        /* Zarovnání textu s tlačítky */
+        /* Zarovnání textu v obsahu */
         .content p {
-            display: flex;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 0.5rem;
+            display: block;
+            line-height: 1.8;
+            margin-bottom: 1rem;
+        }
+        
+        /* Oprava kurzívy v textu */
+        .content em,
+        .content i {
+            font-style: italic;
+            line-height: inherit;
+            vertical-align: baseline;
+        }
+        
+        /* Tlačítka v obsahu mají své zarovnání */
+        .content .btn {
+            display: inline-block;
+            margin: 0.5rem 0.5rem 0.5rem 0;
         }
         
         /* Footer */

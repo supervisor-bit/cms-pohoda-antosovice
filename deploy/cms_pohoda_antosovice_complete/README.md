@@ -80,4 +80,4 @@ Viz soubor LICENSE.txt
 
 ---
 
-**Verze 2.0** - 24. listopadu 2025
+**Verze 2.1** - 24. listopadu 2025
