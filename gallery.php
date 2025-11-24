@@ -233,6 +233,25 @@ $meta_description = 'Galerie fotografií okolí Antošovic - příroda, památky
             margin-bottom: 1.5rem;
         }
 
+        /* Primary buttons */
+        .btn-primary {
+            background: var(--primary-color);
+            border-color: var(--primary-color);
+            padding: 0.75rem 2rem;
+            border-radius: 25px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            background: var(--secondary-color);
+            border-color: var(--secondary-color);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(45, 80, 22, 0.3);
+        }
+
         /* Footer */
         footer {
             background: var(--primary-color);
@@ -400,6 +419,13 @@ $meta_description = 'Galerie fotografií okolí Antošovic - příroda, památky
                     </div>
                 </div>
             <?php endif; ?>
+            
+            <!-- Tlačítko zpět -->
+            <div class="text-center my-5">
+                <a href="index.php" class="btn btn-primary btn-lg">
+                    <i class="fas fa-arrow-left me-2"></i>Zpět na hlavní stránku
+                </a>
+            </div>
         </div>
     </section>
 

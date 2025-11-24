@@ -24,22 +24,6 @@ function generateBootstrapMenu($pdo, $current_slug, $current_parent_slug = '') {
         
         $menu_html = '';
         
-        // Galerie fotek odkaz - pouze pokud existují publikované fotky
-        try {
-            $photo_check = $pdo->query("SELECT COUNT(*) FROM gallery_photos WHERE is_published = 1");
-            $photo_count = $photo_check->fetchColumn();
-            
-            if ($photo_count > 0) {
-                $gallery_active = ($current_slug === 'gallery') ? ' active' : '';
-                $menu_html .= '<li class="nav-item">';
-                $menu_html .= '<a class="nav-link' . $gallery_active . '" href="gallery.php">';
-                $menu_html .= 'Fotky okolí</a>';
-                $menu_html .= '</li>';
-            }
-        } catch (Exception $e) {
-            // Pokud tabulka neexistuje, odkaz nezobrazíme
-        }
-        
         // Generování menu položek (z administrace)
         foreach ($main_pages as $page) {
             $has_submenu = isset($sub_pages[$page['slug']]);
@@ -102,6 +86,22 @@ function generateBootstrapMenu($pdo, $current_slug, $current_parent_slug = '') {
         $menu_html .= '<a class="nav-link' . $events_active . '" href="events.php">';
         $menu_html .= 'Naše akce</a>';
         $menu_html .= '</li>';
+        
+        // Galerie fotek odkaz - pouze pokud existují publikované fotky
+        try {
+            $photo_check = $pdo->query("SELECT COUNT(*) FROM gallery_photos WHERE is_published = 1");
+            $photo_count = $photo_check->fetchColumn();
+            
+            if ($photo_count > 0) {
+                $gallery_active = ($current_slug === 'gallery') ? ' active' : '';
+                $menu_html .= '<li class="nav-item">';
+                $menu_html .= '<a class="nav-link' . $gallery_active . '" href="gallery.php">';
+                $menu_html .= 'Fotky okolí</a>';
+                $menu_html .= '</li>';
+            }
+        } catch (Exception $e) {
+            // Pokud tabulka neexistuje, odkaz nezobrazíme
+        }
         
         // Domů odkaz - na konci menu
         $home_active = ($current_slug === '' || $current_slug === 'home') ? ' active' : '';
