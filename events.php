@@ -265,6 +265,25 @@ try {
             text-decoration: none;
         }
 
+        /* Primary buttons */
+        .btn-primary {
+            background: var(--primary-color);
+            border-color: var(--primary-color);
+            padding: 0.75rem 2rem;
+            border-radius: 25px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            background: var(--secondary-color);
+            border-color: var(--secondary-color);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(45, 80, 22, 0.3);
+        }
+
         /* Event cards */
         .event-card {
             background: rgba(255, 255, 255, 0.95);
@@ -383,6 +402,51 @@ try {
             transform: translateY(-2px);
             box-shadow: 0 8px 25px rgba(45, 80, 22, 0.3);
             text-decoration: none;
+        }
+
+        /* Event description and content */
+        .event-description, .event-content {
+            font-size: 1.05rem;
+            line-height: 1.8;
+        }
+
+        .event-content img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 12px;
+            margin: 1rem 0;
+        }
+
+        /* Events list (sidebar) */
+        .events-list {
+            max-height: 600px;
+            overflow-y: auto;
+        }
+
+        .event-item {
+            padding: 0.75rem;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .event-item:hover {
+            background: rgba(45, 80, 22, 0.05);
+            transform: translateX(5px);
+        }
+
+        .event-item.active {
+            background: rgba(45, 80, 22, 0.1);
+            border-left: 4px solid var(--primary-color);
+            padding-left: 1rem;
+        }
+
+        .event-item a {
+            color: var(--text-dark);
+        }
+
+        .event-item:hover a h6 {
+            color: var(--primary-color);
         }
 
         /* Empty state */
@@ -519,127 +583,140 @@ try {
                 </div>
             </div>
 
-            <!-- Seznam akcí -->
-            <div class="row">
-                <?php if (!empty($events)): ?>
-                    <?php foreach ($events as $event): ?>
-                        <div class="col-12">
-                            <div class="event-card">
-                                <!-- Kategorie badge -->
-                                <?php if ($event['category_color']): ?>
-                                    <span class="event-category-badge" style="background-color: <?= $event['category_color'] ?>">
-                                        <?php if ($event['category_icon']): ?>
-                                            <i class="fas fa-<?= htmlspecialchars($event['category_icon']) ?>"></i>
-                                        <?php endif; ?>
-                                        <?= htmlspecialchars($event['category_name'] ?? $event['category']) ?>
-                                    </span>
+            <!-- Dvousloupcové rozložení -->
+            <?php if (!empty($events)): ?>
+            <div class="row g-4">
+                <!-- Levý sloupec - Detail vybrané akce -->
+                <div class="col-lg-8">
+                    <?php 
+                    // Získat vybranou akci z URL parametru nebo první akci
+                    $selectedSlug = $_GET['selected'] ?? $events[0]['slug'];
+                    $selectedEvent = null;
+                    foreach ($events as $event) {
+                        if ($event['slug'] === $selectedSlug) {
+                            $selectedEvent = $event;
+                            break;
+                        }
+                    }
+                    if (!$selectedEvent) $selectedEvent = $events[0];
+                    ?>
+                    
+                    <div class="event-card">
+                        <!-- Kategorie badge -->
+                        <?php if ($selectedEvent['category_color']): ?>
+                            <span class="event-category-badge" style="background-color: <?= $selectedEvent['category_color'] ?>">
+                                <?php if ($selectedEvent['category_icon']): ?>
+                                    <i class="fas fa-<?= htmlspecialchars($selectedEvent['category_icon']) ?>"></i>
                                 <?php endif; ?>
+                                <?= htmlspecialchars($selectedEvent['category_name'] ?? $selectedEvent['category']) ?>
+                            </span>
+                        <?php endif; ?>
 
-                                <div class="row align-items-center">
-                                    <!-- Datum -->
-                                    <div class="col-md-2">
-                                        <div class="event-date-badge">
-                                            <span class="day"><?= date('j', strtotime($event['start_date'])) ?></span>
-                                            <span class="month"><?php 
-                                                $czech_months = [
-                                                    1 => 'led', 2 => 'úno', 3 => 'bře', 4 => 'dub', 
-                                                    5 => 'kvě', 6 => 'čer', 7 => 'čvc', 8 => 'srp', 
-                                                    9 => 'zář', 10 => 'říj', 11 => 'lis', 12 => 'pro'
-                                                ];
-                                                echo $czech_months[(int)date('n', strtotime($event['start_date']))];
-                                            ?></span>
-                                        </div>
-                                    </div>
-
-                                    <!-- Obsah -->
-                                    <div class="col-md-7">
-                                        <h4 class="event-title">
-                                            <a href="event.php?slug=<?= htmlspecialchars($event['slug']) ?>">
-                                                <?= htmlspecialchars($event['title']) ?>
-                                            </a>
-                                        </h4>
-
-                                        <?php if ($event['description']): ?>
-                                            <p class="mb-2"><?= htmlspecialchars($event['description']) ?></p>
-                                        <?php endif; ?>
-
-                                        <div class="event-meta">
-                                            <!-- Čas -->
-                                            <div class="mb-1">
-                                                <i class="fas fa-clock"></i>
-                                                <?php if ($event['is_all_day']): ?>
-                                                    Celodenní akce
-                                                <?php else: ?>
-                                                    <?= $event['start_time'] ? date('H:i', strtotime($event['start_time'])) : '' ?>
-                                                    <?= $event['end_time'] ? ' - ' . date('H:i', strtotime($event['end_time'])) : '' ?>
-                                                <?php endif; ?>
-                                            </div>
-
-                                            <!-- Místo -->
-                                            <?php if ($event['location']): ?>
-                                                <div class="mb-1">
-                                                    <i class="fas fa-map-marker-alt"></i>
-                                                    <?= htmlspecialchars($event['location']) ?>
-                                                </div>
-                                            <?php endif; ?>
-
-                                            <!-- Cena -->
-                                            <?php if ($event['price']): ?>
-                                                <div class="mb-1">
-                                                    <i class="fas fa-tag"></i>
-                                                    <?= htmlspecialchars($event['price']) ?> Kč
-                                                </div>
-                                            <?php endif; ?>
-
-                                            <!-- Registrace -->
-                                            <?php if (isset($event['registration_enabled']) && $event['registration_enabled']): ?>
-                                                <div class="mb-1">
-                                                    <i class="fas fa-clipboard-list"></i>
-                                                    <span class="text-warning">Vyžaduje registraci</span>
-                                                    <?php if (isset($event['registration_deadline']) && $event['registration_deadline']): ?>
-                                                        (do <?= date('j.n.Y', strtotime($event['registration_deadline'])) ?>)
-                                                    <?php endif; ?>
-                                                </div>
-                                            <?php endif; ?>
-                                        </div>
-                                    </div>
-
-                                    <!-- Akce -->
-                                    <div class="col-md-3 text-end">
-                                        <a href="event.php?slug=<?= htmlspecialchars($event['slug']) ?>" 
-                                           class="btn-event">
-                                            <i class="fas fa-info-circle"></i>Detail akce
-                                        </a>
-                                        
-                                        <?php if (isset($event['registration_enabled']) && $event['registration_enabled']): ?>
-                                            <a href="mailto:<?= htmlspecialchars($settings['contact_email'] ?? 'info@pohoda-antosovice.cz') ?>?subject=Registrace na akci: <?= urlencode($event['title']) ?>" 
-                                               class="btn btn-outline-primary btn-sm mt-2 d-block">
-                                                <i class="fas fa-envelope me-1"></i>Registrovat
-                                            </a>
-                                        <?php endif; ?>
-                                    </div>
-                                </div>
+                        <?php if (isset($selectedEvent['image']) && $selectedEvent['image']): ?>
+                        <img src="<?= htmlspecialchars($selectedEvent['image']) ?>" class="img-fluid rounded mb-3 w-100" alt="<?= htmlspecialchars($selectedEvent['title']) ?>">
+                        <?php endif; ?>
+                        
+                        <h2 class="mb-3"><?= htmlspecialchars($selectedEvent['title']) ?></h2>
+                        
+                        <div class="event-meta mb-4">
+                            <!-- Datum -->
+                            <div class="mb-2">
+                                <i class="fas fa-calendar-alt me-2"></i>
+                                <strong><?= date('j.n.Y', strtotime($selectedEvent['start_date'])) ?></strong>
+                                <?php if ($selectedEvent['end_date'] && $selectedEvent['end_date'] != $selectedEvent['start_date']): ?>
+                                    - <?= date('j.n.Y', strtotime($selectedEvent['end_date'])) ?>
+                                <?php endif; ?>
                             </div>
-                        </div>
-                    <?php endforeach; ?>
-                <?php else: ?>
-                    <div class="col-12">
-                        <div class="empty-events">
-                            <i class="fas fa-calendar-times"></i>
-                            <h4>Žádné akce nenalezeny</h4>
-                            <p>
-                                <?php if ($category || $month || $year != date('Y')): ?>
-                                    Pro vybrané filtry nebyly nalezeny žádné akce.
-                                    <br><a href="events.php" class="btn btn-primary mt-2">Zobrazit všechny akce</a>
+
+                            <!-- Čas -->
+                            <div class="mb-2">
+                                <i class="fas fa-clock me-2"></i>
+                                <?php if ($selectedEvent['is_all_day']): ?>
+                                    Celodenní akce
                                 <?php else: ?>
-                                    Momentálně nejsou naplánované žádné akce.
-                                    <br><small class="text-muted">Sledujte naše stránky pro aktuální informace.</small>
+                                    <?= $selectedEvent['start_time'] ? date('H:i', strtotime($selectedEvent['start_time'])) : '' ?>
+                                    <?= $selectedEvent['end_time'] ? ' - ' . date('H:i', strtotime($selectedEvent['end_time'])) : '' ?>
                                 <?php endif; ?>
-                            </p>
+                            </div>
+
+                            <!-- Místo -->
+                            <?php if ($selectedEvent['location']): ?>
+                                <div class="mb-2">
+                                    <i class="fas fa-map-marker-alt me-2"></i>
+                                    <?= htmlspecialchars($selectedEvent['location']) ?>
+                                </div>
+                            <?php endif; ?>
+                        </div>
+
+                        <!-- Popis -->
+                        <?php if ($selectedEvent['description']): ?>
+                            <div class="event-description mb-4">
+                                <h5>Popis akce</h5>
+                                <p><?= nl2br(htmlspecialchars($selectedEvent['description'])) ?></p>
+                            </div>
+                        <?php endif; ?>
+
+                        <!-- Detailní popis -->
+                        <?php if ($selectedEvent['content']): ?>
+                            <div class="event-content">
+                                <?= $selectedEvent['content'] ?>
+                            </div>
+                        <?php endif; ?>
+                    </div>
+                    
+                    <!-- Tlačítko zpět -->
+                    <div class="mt-4">
+                        <a href="index.php" class="btn btn-primary">
+                            <i class="fas fa-arrow-left me-2"></i>Zpět na hlavní stránku
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- Pravý sloupec - Seznam všech akcí -->
+                <div class="col-lg-4">
+                    <div class="event-card">
+                        <h4 class="mb-4">
+                            <i class="fas fa-list me-2"></i>Všechny akce
+                        </h4>
+                        <div class="events-list">
+                            <?php foreach ($events as $event): ?>
+                            <div class="event-item mb-3 pb-3 border-bottom <?= $event['slug'] === $selectedSlug ? 'active' : '' ?>">
+                                <a href="?selected=<?= htmlspecialchars($event['slug']) ?><?= $category ? '&category=' . urlencode($category) : '' ?><?= $month ? '&month=' . urlencode($month) : '' ?><?= $year ? '&year=' . urlencode($year) : '' ?>" class="text-decoration-none">
+                                    <h6 class="mb-2 <?= $event['slug'] === $selectedSlug ? 'text-primary fw-bold' : '' ?>">
+                                        <?= htmlspecialchars($event['title']) ?>
+                                    </h6>
+                                    <small class="text-muted">
+                                        <i class="fas fa-calendar me-1"></i>
+                                        <?= date('j.n.Y', strtotime($event['start_date'])) ?>
+                                        <?php if (!$event['is_all_day'] && $event['start_time']): ?>
+                                            <i class="fas fa-clock ms-2 me-1"></i>
+                                            <?= date('H:i', strtotime($event['start_time'])) ?>
+                                        <?php endif; ?>
+                                    </small>
+                                </a>
+                            </div>
+                            <?php endforeach; ?>
                         </div>
                     </div>
-                <?php endif; ?>
+                </div>
             </div>
+            <?php else: ?>
+                <div class="col-12">
+                    <div class="event-card text-center py-5">
+                        <i class="fas fa-calendar-times fa-4x text-muted mb-3"></i>
+                        <h4>Žádné akce nenalezeny</h4>
+                        <p class="text-muted">
+                            <?php if ($category || $month || $year != date('Y')): ?>
+                                Pro vybrané filtry nebyly nalezeny žádné akce.
+                                <br><a href="events.php" class="btn btn-primary mt-3">Zobrazit všechny akce</a>
+                            <?php else: ?>
+                                Momentálně nejsou naplánované žádné akce.
+                                <br><small>Sledujte naše stránky pro aktuální informace.</small>
+                            <?php endif; ?>
+                        </p>
+                    </div>
+                </div>
+            <?php endif; ?>
         </div>
     </section>
 

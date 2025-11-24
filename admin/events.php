@@ -24,10 +24,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $location = $_POST['location'] ?? '';
                 $category = $_POST['category'] ?? 'general';
                 $is_all_day = isset($_POST['is_all_day']) ? 1 : 0;
-                $max_participants = $_POST['max_participants'] ?? null;
-                $registration_required = isset($_POST['registration_required']) ? 1 : 0;
-                $registration_deadline = $_POST['registration_deadline'] ?? null;
-                $price = $_POST['price'] ?? null;
                 $is_published = isset($_POST['is_published']) ? 1 : 0;
                 
                 // Vytvoření slug
@@ -37,14 +33,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $stmt = $pdo->prepare("
                         INSERT INTO events (title, description, content, start_date, start_time, 
                                           end_date, end_time, location, category, is_all_day, 
-                                          max_participants, registration_required, registration_deadline, 
-                                          price, is_published, slug) 
-                        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                                          is_published, slug) 
+                        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                     ");
                     $stmt->execute([$title, $description, $content, $start_date, $start_time, 
                                   $end_date, $end_time, $location, $category, $is_all_day,
-                                  $max_participants, $registration_required, $registration_deadline,
-                                  $price, $is_published, $slug]);
+                                  $is_published, $slug]);
                     $success = "Akce byla úspěšně vytvořena.";
                 } else {
                     $id = $_POST['id'];
@@ -52,14 +46,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         UPDATE events 
                         SET title=?, description=?, content=?, start_date=?, start_time=?, 
                             end_date=?, end_time=?, location=?, category=?, is_all_day=?, 
-                            max_participants=?, registration_required=?, registration_deadline=?, 
-                            price=?, is_published=?, slug=?
+                            is_published=?, slug=?
                         WHERE id=?
                     ");
                     $stmt->execute([$title, $description, $content, $start_date, $start_time, 
                                   $end_date, $end_time, $location, $category, $is_all_day,
-                                  $max_participants, $registration_required, $registration_deadline,
-                                  $price, $is_published, $slug, $id]);
+                                  $is_published, $slug, $id]);
                     $success = "Akce byla úspěšně aktualizována.";
                 }
             } elseif ($_POST['action'] === 'delete') {
@@ -347,38 +339,10 @@ function createSlug($text) {
                         <hr>
                     </div>
 
-                    <div class="col-md-6">
+                    <div class="col-md-12">
                         <label class="form-label">Místo konání</label>
                         <input type="text" class="form-control" name="location" 
                                value="<?= $editEvent ? htmlspecialchars($editEvent['location']) : '' ?>">
-                    </div>
-
-                    <div class="col-md-3">
-                        <label class="form-label">Max. účastníků</label>
-                        <input type="number" class="form-control" name="max_participants" 
-                               value="<?= $editEvent ? $editEvent['max_participants'] : '' ?>">
-                    </div>
-
-                    <div class="col-md-3">
-                        <label class="form-label">Cena (Kč)</label>
-                        <input type="number" step="0.01" class="form-control" name="price" 
-                               value="<?= $editEvent ? $editEvent['price'] : '' ?>">
-                    </div>
-
-                    <div class="col-md-6">
-                        <div class="form-check">
-                            <input type="checkbox" class="form-check-input" name="registration_required" 
-                                   <?= ($editEvent && $editEvent['registration_required']) ? 'checked' : '' ?>>
-                            <label class="form-check-label">
-                                Vyžaduje registraci
-                            </label>
-                        </div>
-                    </div>
-
-                    <div class="col-md-6">
-                        <label class="form-label">Deadline registrace</label>
-                        <input type="date" class="form-control" name="registration_deadline" 
-                               value="<?= $editEvent ? $editEvent['registration_deadline'] : '' ?>">
                     </div>
 
                     <!-- Obsah -->

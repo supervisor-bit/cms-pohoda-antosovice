@@ -462,7 +462,9 @@ try {
                 <h1 class="display-4 mb-3"><?= htmlspecialchars($event['title']) ?></h1>
                 
                 <?php if ($event['description']): ?>
-                    <p class="lead mb-4"><?= htmlspecialchars($event['description']) ?></p>
+                    <div class="lead mb-4">
+                        <?= nl2br(htmlspecialchars($event['description'])) ?>
+                    </div>
                 <?php endif; ?>
 
                 <!-- Quick Meta -->
@@ -604,14 +606,26 @@ try {
                             <?php endif; ?>
                         </div>
 
-                        <!-- Full Description -->
-                        <?php if (!empty($event['full_description'])): ?>
+                        <!-- Description -->
+                        <?php if (!empty($event['description'])): ?>
                             <div class="mt-4">
                                 <h5 style="color: var(--primary-color);">
                                     <i class="fas fa-align-left me-2"></i>Popis akce
                                 </h5>
                                 <div class="content">
-                                    <?= nl2br(htmlspecialchars($event['full_description'])) ?>
+                                    <?= nl2br(htmlspecialchars($event['description'])) ?>
+                                </div>
+                            </div>
+                        <?php endif; ?>
+
+                        <!-- Detailed Content -->
+                        <?php if (!empty($event['content'])): ?>
+                            <div class="mt-4">
+                                <h5 style="color: var(--primary-color);">
+                                    <i class="fas fa-file-alt me-2"></i>Detailní informace
+                                </h5>
+                                <div class="content">
+                                    <?= $event['content'] ?>
                                 </div>
                             </div>
                         <?php endif; ?>
