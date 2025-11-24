@@ -91,6 +91,11 @@ $meta_description = 'Galerie fotografií okolí Antošovic - příroda, památky
             backdrop-filter: blur(10px);
             box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
             transition: all 0.3s ease;
+            z-index: 1000;
+        }
+
+        .dropdown-menu {
+            z-index: 1050 !important;
         }
 
         .navbar .container {
@@ -165,8 +170,11 @@ $meta_description = 'Galerie fotografií okolí Antošovic - příroda, památky
             background: #6f9183 !important;
             color: white;
             padding: 6rem 0 4rem;
-            position: relative;
+            position: sticky;
+            top: 80px;
+            z-index: 100;
             overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
         }
 
         .page-header::before {
@@ -302,6 +310,8 @@ $meta_description = 'Galerie fotografií okolí Antošovic - příroda, památky
         @media (max-width: 768px) {
             .page-header {
                 padding: 60px 0 40px;
+                position: relative;
+                top: 0;
             }
             
             .main-content {

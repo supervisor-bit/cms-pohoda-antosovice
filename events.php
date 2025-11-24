@@ -129,6 +129,11 @@ try {
             backdrop-filter: blur(10px);
             box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
             transition: all 0.3s ease;
+            z-index: 1000;
+        }
+
+        .dropdown-menu {
+            z-index: 1050 !important;
         }
 
         .navbar .container {
@@ -188,9 +193,12 @@ try {
         .page-header {
             background: #6f9183 !important;
             color: white;
-            padding: 4rem 0 3rem;
-            position: relative;
+            padding: 6rem 0 4rem;
+            position: sticky;
+            top: 80px;
+            z-index: 100;
             overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
         }
 
         .page-header::before {
@@ -490,6 +498,8 @@ try {
             
             .page-header {
                 padding: 4rem 0 2rem;
+                position: relative;
+                top: 0;
             }
 
             .filters-section {

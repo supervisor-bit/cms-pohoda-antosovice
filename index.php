@@ -29,7 +29,7 @@ try {
         'instagram_url' => ''
     ], $settings);
     
-    // Načtení nejnovějšího příspěvku (pouze 1 pro homepage)
+    // Načtení nejnovějšího příspěvku pro homepage
     $stmt = $pdo->prepare("SELECT title, slug, excerpt, content, featured_image, created_at FROM posts WHERE is_published = 1 ORDER BY created_at DESC LIMIT 1");
     $stmt->execute();
     $posts = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -139,6 +139,11 @@ try {
             backdrop-filter: blur(10px);
             box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
             transition: all 0.3s ease;
+            z-index: 1000;
+        }
+
+        .dropdown-menu {
+            z-index: 1050 !important;
         }
 
         .navbar .container {
@@ -551,11 +556,15 @@ try {
                                                 </p>
                                                 <div class="card-text">
                                                     <?php 
-                                                    // Zobrazit prvních 400 znaků z content (včetně HTML)
-                                                    $content = strip_tags($post['content']);
-                                                    $preview = mb_substr($content, 0, 400);
-                                                    echo nl2br(htmlspecialchars($preview));
-                                                    if (mb_strlen($content) > 400) echo '...';
+                                                    // Zobrazit excerpt pokud existuje, jinak prvních 300 znaků z content
+                                                    if (!empty($post['excerpt'])) {
+                                                        echo nl2br(htmlspecialchars($post['excerpt']));
+                                                    } else {
+                                                        $content = strip_tags($post['content']);
+                                                        $preview = mb_substr($content, 0, 300);
+                                                        echo nl2br(htmlspecialchars($preview));
+                                                        if (mb_strlen($content) > 300) echo '...';
+                                                    }
                                                     ?>
                                                 </div>
                                                 <a href="post_new.php?slug=<?= htmlspecialchars($post['slug']) ?>" class="btn btn-primary mt-3">

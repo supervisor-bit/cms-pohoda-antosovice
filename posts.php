@@ -23,7 +23,18 @@ try {
     // Načtení všech publikovaných příspěvků
     $stmt = $pdo->prepare("SELECT title, slug, excerpt, content, featured_image, created_at FROM posts WHERE is_published = 1 ORDER BY created_at DESC");
     $stmt->execute();
-    $posts = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    $all_posts = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    
+    // Seskupení článků podle let
+    $posts_by_year = [];
+    foreach ($all_posts as $article_item) {
+        $post_year = date('Y', strtotime($article_item['created_at']));
+        if (!isset($posts_by_year[$post_year])) {
+            $posts_by_year[$post_year] = [];
+        }
+        $posts_by_year[$post_year][] = $article_item;
+    }
+    krsort($posts_by_year); // Seřadit od nejnovějších
     
 } catch (PDOException $e) {
     die("Chyba databáze: " . $e->getMessage());
@@ -79,6 +90,7 @@ $menu = generateBootstrapMenu($pdo, $current_slug);
             backdrop-filter: blur(10px);
             box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
             transition: all 0.3s ease;
+            z-index: 1000;
         }
 
         .navbar .container {
@@ -133,11 +145,33 @@ $menu = generateBootstrapMenu($pdo, $current_slug);
             font-weight: 600;
         }
 
+        .dropdown-menu {
+            z-index: 1050 !important;
+        }
+
         .page-header {
             background: #6f9183 !important;
             color: white;
             padding: 3rem 0;
             margin-bottom: 2rem;
+            position: sticky;
+            top: 80px;
+            z-index: 100;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .page-header-content h1 {
+            color: white;
+        }
+
+        .article-meta {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 0.95rem;
+            margin-top: 1rem;
+        }
+
+        .article-meta i {
+            opacity: 0.8;
         }
 
         .content-card {
@@ -196,28 +230,90 @@ $menu = generateBootstrapMenu($pdo, $current_slug);
         }
 
         .article-item {
-            padding: 0.75rem;
-            border-radius: 8px;
+            padding: 0.5rem 0.75rem;
+            border-radius: 6px;
             transition: all 0.3s ease;
+            margin-bottom: 0.5rem;
+            border-left: 2px solid transparent;
+        }
+
+        .article-item.year-header {
+            background: rgba(111, 145, 131, 0.1);
+            font-weight: 600;
+            border-left: 3px solid #6f9183;
+            padding: 0.75rem;
+            margin-top: 1rem;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--text-dark);
+        }
+
+        .article-item.year-header:first-child {
+            margin-top: 0;
+        }
+
+        .article-item.year-header i {
+            color: #6f9183;
+            font-size: 1rem;
+        }
+
+        .article-item.year-header h6 {
+            margin: 0;
+            font-size: 1rem;
+        }
+
+        .article-item.article-child {
+            padding-left: 2rem;
         }
 
         .article-item:hover {
-            background: var(--bg-light);
-            transform: translateX(5px);
+            background: rgba(111, 145, 131, 0.05);
+            border-left-color: #6f9183;
         }
 
         .article-item.active {
-            background: rgba(45, 80, 22, 0.1);
-            border-left: 4px solid #6f9183;
-            padding-left: 1rem;
+            background: rgba(111, 145, 131, 0.15);
+            border-left: 3px solid #6f9183;
+            font-weight: 600;
         }
 
         .article-item a {
             color: var(--text-dark);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .article-item a i {
+            color: #6f9183;
+            font-size: 0.9rem;
         }
 
         .article-item:hover a h6 {
             color: #6f9183;
+        }
+        
+        .article-item h6 {
+            margin: 0;
+            font-size: 0.95rem;
+            line-height: 1.4;
+        }
+        
+        .article-item small {
+            font-size: 0.75rem;
+            display: block;
+            margin-top: 0.25rem;
+            padding-left: 1.5rem;
+        }
+
+        @media (max-width: 768px) {
+            .page-header {
+                position: relative;
+                top: 0;
+                padding: 2rem 0;
+            }
         }
 
         footer {
@@ -259,46 +355,51 @@ $menu = generateBootstrapMenu($pdo, $current_slug);
         </div>
     </nav>
 
+    <?php 
+    // Získat všechny články do jednoho pole pro snadnější práci
+    $all_posts_flat = [];
+    foreach ($posts_by_year as $year_posts) {
+        $all_posts_flat = array_merge($all_posts_flat, $year_posts);
+    }
+    
+    // Získat vybraný článek z URL parametru nebo první článek
+    $selectedSlug = $_GET['selected'] ?? $all_posts_flat[0]['slug'];
+    $selectedPost = null;
+    foreach ($all_posts_flat as $post) {
+        if ($post['slug'] === $selectedSlug) {
+            $selectedPost = $post;
+            break;
+        }
+    }
+    if (!$selectedPost) $selectedPost = $all_posts_flat[0];
+    ?>
+
     <!-- Page Header -->
     <section class="page-header">
         <div class="container">
-            <h1 class="display-4 mb-3">
-                <i class="fas fa-newspaper me-3"></i>Všechny články
-            </h1>
-            <p class="lead">Novinky a aktuality ze spolku</p>
+            <div class="page-header-content text-center">
+                <h1 class="display-4 mb-3"><?= htmlspecialchars($selectedPost['title']) ?></h1>
+                <?php if (!empty($selectedPost['excerpt'])): ?>
+                    <p class="lead"><?= htmlspecialchars($selectedPost['excerpt']) ?></p>
+                <?php endif; ?>
+                <div class="article-meta">
+                    <span><i class="fas fa-calendar me-1"></i><?= date('j. n. Y', strtotime($selectedPost['created_at'])) ?></span>
+                </div>
+            </div>
         </div>
     </section>
 
     <!-- Main Content -->
     <section class="main-content py-5">
         <div class="container">
-            <?php if (!empty($posts)): ?>
+            <?php if (!empty($posts_by_year)): ?>
             <div class="row g-4">
-                <!-- Levý sloupec - Detail vybraného článku -->
+                <!-- Levý sloupec - Detail článku -->
                 <div class="col-lg-8">
-                    <?php 
-                    // Získat vybraný článek z URL parametru nebo první článek
-                    $selectedSlug = $_GET['selected'] ?? $posts[0]['slug'];
-                    $selectedPost = null;
-                    foreach ($posts as $post) {
-                        if ($post['slug'] === $selectedSlug) {
-                            $selectedPost = $post;
-                            break;
-                        }
-                    }
-                    if (!$selectedPost) $selectedPost = $posts[0];
-                    ?>
-                    
                     <div class="content-card">
                         <?php if ($selectedPost['featured_image']): ?>
                         <img src="<?= htmlspecialchars($selectedPost['featured_image']) ?>" class="img-fluid rounded mb-3 w-100" alt="<?= htmlspecialchars($selectedPost['title']) ?>">
                         <?php endif; ?>
-                        
-                        <h2 class="mb-3"><?= htmlspecialchars($selectedPost['title']) ?></h2>
-                        <p class="text-muted mb-4">
-                            <i class="fas fa-calendar me-2"></i>
-                            <?= date('j.n.Y', strtotime($selectedPost['created_at'])) ?>
-                        </p>
                         
                         <div class="article-content">
                             <?= $selectedPost['content'] ?>
@@ -313,25 +414,36 @@ $menu = generateBootstrapMenu($pdo, $current_slug);
                     </div>
                 </div>
                 
-                <!-- Pravý sloupec - Seznam všech článků -->
+                <!-- Pravý sloupec - Seznam článků podle let -->
                 <div class="col-lg-4">
                     <div class="content-card">
                         <h4 class="mb-4">
                             <i class="fas fa-list me-2"></i>Všechny články
                         </h4>
                         <div class="articles-list">
-                            <?php foreach ($posts as $post): ?>
-                            <div class="article-item mb-3 pb-3 border-bottom <?= $post['slug'] === $selectedSlug ? 'active' : '' ?>">
-                                <a href="?selected=<?= htmlspecialchars($post['slug']) ?>" class="text-decoration-none">
-                                    <h6 class="mb-2 <?= $post['slug'] === $selectedSlug ? 'text-primary fw-bold' : '' ?>">
-                                        <?= htmlspecialchars($post['title']) ?>
-                                    </h6>
-                                    <small class="text-muted">
-                                        <i class="fas fa-calendar me-1"></i>
-                                        <?= date('j.n.Y', strtotime($post['created_at'])) ?>
-                                    </small>
-                                </a>
-                            </div>
+                            <?php foreach ($posts_by_year as $y => $year_posts): ?>
+                                <!-- Rok jako nadřazený prvek -->
+                                <div class="article-item year-header">
+                                    <i class="fas fa-folder"></i>
+                                    <div>
+                                        <h6><?= $y ?> <span class="text-muted">(<?= count($year_posts) ?>)</span></h6>
+                                    </div>
+                                </div>
+                                <!-- Články pod daným rokem -->
+                                <?php foreach ($year_posts as $post): ?>
+                                <div class="article-item article-child <?= $post['slug'] === $selectedSlug ? 'active' : '' ?>">
+                                    <a href="?selected=<?= htmlspecialchars($post['slug']) ?>" class="text-decoration-none">
+                                        <i class="fas fa-file-alt"></i>
+                                        <div>
+                                            <h6><?= htmlspecialchars($post['title']) ?></h6>
+                                            <small class="text-muted">
+                                                <i class="fas fa-calendar me-1"></i>
+                                                <?= date('j.n.Y', strtotime($post['created_at'])) ?>
+                                            </small>
+                                        </div>
+                                    </a>
+                                </div>
+                                <?php endforeach; ?>
                             <?php endforeach; ?>
                         </div>
                     </div>

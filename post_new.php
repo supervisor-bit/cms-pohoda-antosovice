@@ -38,10 +38,21 @@ try {
         $quickLinks = []; // Fallback pokud tabulka neexistuje
     }
     
-    // Získat související články
-    $stmt = $pdo->prepare("SELECT title, slug, excerpt, featured_image, created_at FROM posts WHERE is_published = 1 AND slug != ? ORDER BY created_at DESC LIMIT 3");
-    $stmt->execute([$slug]);
-    $related_posts = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    // Získat všechny články pro sidebar a seskupit podle roku
+    $stmt = $pdo->prepare("SELECT title, slug, excerpt, featured_image, created_at FROM posts WHERE is_published = 1 ORDER BY created_at DESC");
+    $stmt->execute();
+    $all_posts = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    
+    // Seskupit články podle roku
+    $posts_by_year = [];
+    foreach ($all_posts as $sidebar_post) {
+        $post_year = date('Y', strtotime($sidebar_post['created_at']));
+        if (!isset($posts_by_year[$post_year])) {
+            $posts_by_year[$post_year] = [];
+        }
+        $posts_by_year[$post_year][] = $sidebar_post;
+    }
+    krsort($posts_by_year); // Seřadit roky sestupně
     
 } catch (PDOException $e) {
     header('HTTP/1.0 500 Internal Server Error');
@@ -100,6 +111,11 @@ $menu = generateBootstrapMenu($pdo, '');
             backdrop-filter: blur(10px);
             box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
             transition: all 0.3s ease;
+            z-index: 1000;
+        }
+
+        .dropdown-menu {
+            z-index: 1050 !important;
         }
 
         .navbar .container {
@@ -331,6 +347,31 @@ $menu = generateBootstrapMenu($pdo, '');
             position: relative;
         }
 
+        .page-header {
+            background: #6f9183 !important;
+            color: white;
+            padding: 3rem 0;
+            margin-bottom: 2rem;
+            position: sticky;
+            top: 80px;
+            z-index: 100;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .page-header-content h1 {
+            color: white;
+        }
+
+        .article-meta {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 0.95rem;
+            margin-top: 1rem;
+        }
+
+        .article-meta i {
+            opacity: 0.8;
+        }
+
         .article-content::before {
             content: '';
             position: absolute;
@@ -389,27 +430,88 @@ $menu = generateBootstrapMenu($pdo, '');
         }
         
         .related-article {
-            border-bottom: 1px solid #eee;
-            padding: 1rem 0;
-            transition: transform 0.3s ease;
+            padding: 0.5rem 0.75rem;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+            margin-bottom: 0.5rem;
+            border-left: 2px solid transparent;
+        }
+        
+        .related-article.year-header {
+            background: rgba(111, 145, 131, 0.1);
+            font-weight: 600;
+            border-left: 3px solid #6f9183;
+            padding: 0.75rem;
+            margin-top: 1rem;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--text-dark);
+        }
+
+        .related-article.year-header:first-child {
+            margin-top: 0;
+        }
+
+        .related-article.year-header i {
+            color: #6f9183;
+            font-size: 1rem;
+        }
+
+        .related-article.year-header h5 {
+            margin: 0;
+            font-size: 1rem;
+        }
+
+        .related-article.article-child {
+            padding-left: 2rem;
         }
         
         .related-article:last-child {
-            border-bottom: none;
+            margin-bottom: 0;
         }
         
         .related-article:hover {
-            transform: translateX(5px);
+            background: rgba(111, 145, 131, 0.05);
+            border-left-color: #6f9183;
         }
         
-        .related-article h5 {
-            color: #6f9183;
-            margin-bottom: 0.5rem;
+        .related-article.active-article {
+            background: rgba(111, 145, 131, 0.15);
+            border-left: 3px solid #6f9183;
+            font-weight: 600;
         }
         
         .related-article a {
             text-decoration: none;
             color: inherit;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .related-article a i {
+            color: #6f9183;
+            font-size: 0.9rem;
+        }
+        
+        .related-article h5 {
+            color: #333;
+            margin: 0;
+            font-size: 0.95rem;
+            line-height: 1.4;
+        }
+        
+        .related-article:hover h5 {
+            color: #6f9183;
+        }
+        
+        .related-article small {
+            font-size: 0.75rem;
+            display: block;
+            margin-top: 0.25rem;
+            padding-left: 1.5rem;
         }
         
         /* Buttons */
@@ -512,6 +614,12 @@ $menu = generateBootstrapMenu($pdo, '');
         }
         
         @media (max-width: 768px) {
+            .page-header {
+                position: relative;
+                top: 0;
+                padding: 2rem 0;
+            }
+            
             .article-header {
                 padding: 60px 0 40px;
             }
@@ -585,7 +693,7 @@ $menu = generateBootstrapMenu($pdo, '');
                         <?php endif; ?>
                         
                         <div class="content">
-                            <?= $post['content'] ?>
+                            <?= $post['content'] ?? '' ?>
                         </div>
                         
                         <div class="mt-4 pt-3 border-top">
@@ -597,22 +705,32 @@ $menu = generateBootstrapMenu($pdo, '');
                 </div>
                 
                 <div class="col-lg-4">
-                    <!-- Related Articles -->
-                    <?php if (!empty($related_posts)): ?>
+                    <!-- Všechny články podle roku -->
+                    <?php if (!empty($posts_by_year)): ?>
                     <div class="related-articles">
-                        <h3><i class="fas fa-newspaper me-2"></i>Související články</h3>
-                        <?php foreach ($related_posts as $related): ?>
-                            <div class="related-article">
-                                <a href="post_new.php?slug=<?= htmlspecialchars($related['slug']) ?>">
-                                    <h5><?= htmlspecialchars($related['title']) ?></h5>
-                                    <?php if (!empty($related['excerpt'])): ?>
-                                        <p class="text-muted small mb-1"><?= htmlspecialchars(substr($related['excerpt'], 0, 80)) ?>...</p>
-                                    <?php endif; ?>
-                                    <small class="text-muted">
-                                        <i class="fas fa-calendar me-1"></i><?= date('j. n. Y', strtotime($related['created_at'])) ?>
-                                    </small>
-                                </a>
+                        <h3><i class="fas fa-newspaper me-2"></i>Všechny články</h3>
+                        <?php foreach ($posts_by_year as $year => $year_posts): ?>
+                            <!-- Rok jako nadřazený prvek -->
+                            <div class="related-article year-header">
+                                <i class="fas fa-folder"></i>
+                                <div>
+                                    <h5><?= $year ?> <span class="text-muted">(<?= count($year_posts) ?>)</span></h5>
+                                </div>
                             </div>
+                            <!-- Články pod daným rokem -->
+                            <?php foreach ($year_posts as $article): ?>
+                                <div class="related-article article-child <?= $article['slug'] === $slug ? 'active-article' : '' ?>">
+                                    <a href="post_new.php?slug=<?= htmlspecialchars($article['slug']) ?>">
+                                        <i class="fas fa-file-alt"></i>
+                                        <div>
+                                            <h5><?= htmlspecialchars($article['title']) ?></h5>
+                                            <small class="text-muted">
+                                                <i class="fas fa-calendar me-1"></i><?= date('j. n. Y', strtotime($article['created_at'])) ?>
+                                            </small>
+                                        </div>
+                                    </a>
+                                </div>
+                            <?php endforeach; ?>
                         <?php endforeach; ?>
                     </div>
                     <?php endif; ?>
