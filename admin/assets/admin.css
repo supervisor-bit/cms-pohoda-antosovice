@@ -99,6 +99,13 @@ body {
     margin-bottom: 0.5rem;
 }
 
+.nav-divider {
+    height: 1px;
+    background: rgba(255,255,255,0.15);
+    margin: 1rem 1.5rem;
+    list-style: none;
+}
+
 .nav-link {
     display: flex;
     align-items: center;

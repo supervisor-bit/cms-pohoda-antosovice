@@ -3,7 +3,7 @@
 function generateBootstrapMenu($pdo, $current_slug, $current_parent_slug = '') {
     try {
         // Načtení všech stránek (pouze s menu_order >= 0)
-        $stmt = $pdo->prepare("SELECT id, title, slug, parent_slug, icon, menu_order FROM pages WHERE is_published = 1 AND menu_order >= 0 ORDER BY menu_order ASC, title ASC");
+        $stmt = $pdo->prepare("SELECT id, title, slug, custom_url, parent_slug, icon, menu_order FROM pages WHERE is_published = 1 AND menu_order >= 0 ORDER BY menu_order ASC, title ASC");
         $stmt->execute();
         $all_pages = $stmt->fetchAll(PDO::FETCH_ASSOC);
         
@@ -55,14 +55,44 @@ function generateBootstrapMenu($pdo, $current_slug, $current_parent_slug = '') {
                 $menu_html .= '<ul class="dropdown-menu">';
                 
                 // Hlavní stránka v dropdown
-                $menu_html .= '<li><a class="dropdown-item" href="page_new.php?slug=' . htmlspecialchars($page['slug']) . '">';
+                $main_url = !empty($page['custom_url']) ? htmlspecialchars($page['custom_url']) : 'page_new.php?slug=' . htmlspecialchars($page['slug']);
+                $menu_html .= '<li><a class="dropdown-item" href="' . $main_url . '">';
                 $menu_html .= htmlspecialchars($page['title']) . ' - Úvod';
                 $menu_html .= '</a></li>';
                 $menu_html .= '<li><hr class="dropdown-divider"></li>';
                 
-                // Podstránky
+                // Podstránky - nejdřív normální, pak custom_url oddělené
+                $normal_sub_pages = [];
+                $custom_sub_pages = [];
+                
                 foreach ($sub_pages[$page['slug']] as $sub_page) {
-                    $menu_html .= '<li><a class="dropdown-item" href="page_new.php?slug=' . htmlspecialchars($sub_page['slug']) . '">';
+                    if (!empty($sub_page['custom_url'])) {
+                        $custom_sub_pages[] = $sub_page;
+                    } else {
+                        $normal_sub_pages[] = $sub_page;
+                    }
+                }
+                
+                // Normální podstránky
+                foreach ($normal_sub_pages as $sub_page) {
+                    $sub_url = 'page_new.php?slug=' . htmlspecialchars($sub_page['slug']);
+                    $menu_html .= '<li><a class="dropdown-item" href="' . $sub_url . '">';
+                    $menu_html .= htmlspecialchars($sub_page['title']);
+                    $menu_html .= '</a></li>';
+                }
+                
+                // Oddělovač před custom_url položky
+                if (!empty($custom_sub_pages)) {
+                    $menu_html .= '<li><hr class="dropdown-divider"></li>';
+                }
+                
+                // Custom URL podstránky
+                foreach ($custom_sub_pages as $sub_page) {
+                    $sub_url = htmlspecialchars($sub_page['custom_url']);
+                    $menu_html .= '<li><a class="dropdown-item" href="' . $sub_url . '">';
+                    if (!empty($sub_page['icon'])) {
+                        $menu_html .= '<i class="' . htmlspecialchars($sub_page['icon']) . ' me-1"></i>';
+                    }
                     $menu_html .= htmlspecialchars($sub_page['title']);
                     $menu_html .= '</a></li>';
                 }
@@ -72,8 +102,9 @@ function generateBootstrapMenu($pdo, $current_slug, $current_parent_slug = '') {
             } else {
                 // Jednoduchá stránka - pouze aktivní pokud je to přesně tato stránka
                 $active_class = (!empty($current_slug) && $current_slug === $page['slug']) ? ' active' : '';
+                $page_url = !empty($page['custom_url']) ? htmlspecialchars($page['custom_url']) : 'page_new.php?slug=' . htmlspecialchars($page['slug']);
                 $menu_html .= '<li class="nav-item">';
-                $menu_html .= '<a class="nav-link' . $active_class . '" href="page_new.php?slug=' . htmlspecialchars($page['slug']) . '">';
+                $menu_html .= '<a class="nav-link' . $active_class . '" href="' . $page_url . '">';
                 $menu_html .= htmlspecialchars($page['title']);
                 $menu_html .= '</a>';
                 $menu_html .= '</li>';
@@ -86,6 +117,9 @@ function generateBootstrapMenu($pdo, $current_slug, $current_parent_slug = '') {
         $menu_html .= '<a class="nav-link' . $events_active . '" href="events.php">';
         $menu_html .= 'Naše akce</a>';
         $menu_html .= '</li>';
+        
+        // Oddělovač před Domů
+        $menu_html .= '<li class="nav-item nav-divider"><hr style="border-color: rgba(255,255,255,0.3); margin: 0.5rem 1rem;"></li>';
         
         // Domů odkaz - na konci menu
         $home_active = ($current_slug === '' || $current_slug === 'home') ? ' active' : '';

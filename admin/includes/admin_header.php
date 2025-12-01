@@ -54,6 +54,12 @@ $current_page = basename($_SERVER['PHP_SELF'], '.php');
                         </a>
                     </li>
                     <li class="nav-item">
+                        <a href="homepage_cards.php" class="nav-link <?= $current_page === 'homepage_cards' ? 'active' : '' ?>">
+                            <i class="fas fa-th-large"></i>
+                            <span class="nav-text">Karty (homepage)</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
                         <a href="posts.php" class="nav-link <?= $current_page === 'posts' ? 'active' : '' ?>">
                             <i class="fas fa-newspaper"></i>
                             <span class="nav-text">Články</span>

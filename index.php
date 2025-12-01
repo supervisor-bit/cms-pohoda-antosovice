@@ -54,6 +54,14 @@ try {
         $upcomingEvents = [];
     }
     
+    // Načíst karty pro hlavní stránku
+    try {
+        $cardsStmt = $pdo->query("SELECT * FROM homepage_cards WHERE is_active = 1 ORDER BY position ASC");
+        $homepageCards = $cardsStmt->fetchAll(PDO::FETCH_ASSOC);
+    } catch (Exception $e) {
+        $homepageCards = [];
+    }
+    
 } catch (PDOException $e) {
     $settings = [
         'site_title' => 'Pohoda Antošovice',
@@ -194,9 +202,9 @@ try {
         
         .navbar-nav .nav-link.active {
             color: white !important;
-            background: rgba(255,255,255,0.3) !important;
+            background: #5a7a6b !important;
             font-weight: 600;
-            box-shadow: 0 4px 20px rgba(255,255,255,0.15);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
         }
 
         /* Page Header */
@@ -476,6 +484,61 @@ try {
             .content-card {
                 margin-bottom: 2rem;
             }
+            
+            /* Mobilní menu - zachovat barvu pozadí */
+            .navbar-collapse {
+                background: #6f9183 !important;
+                padding: 1rem;
+                border-radius: 8px;
+                margin-top: 0.5rem;
+            }
+            
+            .navbar-nav {
+                background: transparent !important;
+            }
+            
+            .navbar-nav .nav-link {
+                background: transparent !important;
+                margin: 0.2rem 0;
+            }
+            
+            .navbar-nav .nav-link:hover {
+                background: rgba(255,255,255,0.15) !important;
+            }
+            
+            .navbar-nav .nav-link.active {
+                background: #5a7a6b !important;
+            }
+            
+            /* Dropdown v mobilním menu */
+            .navbar-nav .dropdown-menu {
+                background: #5a7a6b !important;
+                border: none;
+                box-shadow: none;
+                position: static !important;
+                float: none;
+                width: auto;
+                margin-top: 0;
+                padding: 0.5rem 0;
+            }
+            
+            .navbar-nav .dropdown-item {
+                color: white !important;
+                padding: 0.5rem 1rem;
+            }
+            
+            .navbar-nav .dropdown-item:hover {
+                background: rgba(255,255,255,0.15) !important;
+                color: white !important;
+            }
+            
+            .navbar-nav .dropdown-divider {
+                border-color: rgba(255,255,255,0.2);
+            }
+            
+            .navbar-nav .dropdown-toggle::after {
+                color: white;
+            }
         }
     </style>
 </head>
@@ -587,45 +650,35 @@ try {
                             <?php endif; ?>
                             <?php endif; ?>
                             
-                            <!-- Statické karty - zobrazit po článcích -->
+                            <!-- Dynamické karty z administrace -->
+                            <?php foreach ($homepageCards as $card): ?>
                             <div class="col-md-4">
                                 <div class="content-card">
-                                    <h5>Naturistická lokalita Pohoda v Antošovicích</h5>
-                                    <p>Jsme rádi, že jste navštívili naše stránky. Naši lokalitu v Antošovicích jste již také navštívili? Ta totiž nabízí jedinečný zážitek v souladu s přírodou.</p>
-                                    <a href="page_new.php?slug=vice-informaci" class="btn btn-primary">
-                                        <i class="fas fa-arrow-right me-2"></i>Více informací
-                                    </a>
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="content-card">
-                                    <h5>Kontaktujte nás</h5>
-                                    <p>Máte otázky nebo chcete rezervovat pobyt? Neváhejte nás kontaktovat telefonicky nebo emailem.</p>
-                                    <a href="page_new.php?slug=kontakt" class="btn btn-primary">
-                                        <i class="fas fa-envelope me-2"></i>Kontakt
-                                    </a>
-                                </div>
-                            </div>
-                            <?php if (!empty($settings['facebook_url']) || !empty($settings['instagram_url'])): ?>
-                            <div class="col-md-4">
-                                <div class="content-card">
-                                    <h5>Sledujte nás</h5>
-                                    <p>Zůstaňte v kontaktu a sledujte naše nejnovější příspěvky a fotky z kempu na sociálních sítích.</p>
-                                    <div class="d-flex flex-column gap-2">
-                                        <?php if (!empty($settings['facebook_url'])): ?>
-                                        <a href="<?= htmlspecialchars($settings['facebook_url']) ?>" target="_blank" class="btn btn-primary">
-                                            <i class="fab fa-facebook-f me-2"></i>Facebook
+                                    <h5><?= htmlspecialchars($card['title']) ?></h5>
+                                    <p><?= nl2br(htmlspecialchars($card['description'])) ?></p>
+                                    
+                                    <?php if ($card['button_link'] === '#' && (!empty($settings['facebook_url']) || !empty($settings['instagram_url']))): ?>
+                                        <!-- Speciální případ pro sociální sítě -->
+                                        <div class="d-flex flex-column gap-2">
+                                            <?php if (!empty($settings['facebook_url'])): ?>
+                                            <a href="<?= htmlspecialchars($settings['facebook_url']) ?>" target="_blank" class="btn btn-primary">
+                                                <i class="fab fa-facebook-f me-2"></i>Facebook
+                                            </a>
+                                            <?php endif; ?>
+                                            <?php if (!empty($settings['instagram_url'])): ?>
+                                            <a href="<?= htmlspecialchars($settings['instagram_url']) ?>" target="_blank" class="btn btn-primary">
+                                                <i class="fab fa-instagram me-2"></i>Instagram
+                                            </a>
+                                            <?php endif; ?>
+                                        </div>
+                                    <?php else: ?>
+                                        <a href="<?= htmlspecialchars($card['button_link']) ?>" class="btn btn-primary">
+                                            <i class="fas <?= htmlspecialchars($card['icon']) ?> me-2"></i><?= htmlspecialchars($card['button_text']) ?>
                                         </a>
-                                        <?php endif; ?>
-                                        <?php if (!empty($settings['instagram_url'])): ?>
-                                        <a href="<?= htmlspecialchars($settings['instagram_url']) ?>" target="_blank" class="btn btn-primary">
-                                            <i class="fab fa-instagram me-2"></i>Instagram
-                                        </a>
-                                        <?php endif; ?>
-                                    </div>
+                                    <?php endif; ?>
                                 </div>
                             </div>
-                            <?php endif; ?>
+                            <?php endforeach; ?>
                         </div>
                     </div>
                 </div>

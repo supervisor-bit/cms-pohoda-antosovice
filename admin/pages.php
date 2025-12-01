@@ -27,6 +27,7 @@ if ($action === 'add' || $action === 'edit') {
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $title = sanitize($_POST['title'] ?? '');
         $slug = sanitize($_POST['slug'] ?? '');
+        $custom_url = empty($_POST['custom_url']) ? null : sanitize($_POST['custom_url']);
         $content = $_POST['content'] ?? '';
         $meta_description = sanitize($_POST['meta_description'] ?? '');
         $status = $_POST['status'] ?? 'published';
@@ -46,8 +47,8 @@ if ($action === 'add' || $action === 'edit') {
                     if ($stmt->fetch()) {
                         $error_message = 'Slug už existuje, vyberte jiný.';
                     } else {
-                        $stmt = $pdo->prepare("INSERT INTO pages (title, slug, content, meta_description, status, parent_slug, icon, menu_order, has_sidebar_menu) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
-                        $stmt->execute([$title, $slug, $content, $meta_description, $status, $parent_slug, $icon, $menu_order, $has_sidebar_menu]);
+                        $stmt = $pdo->prepare("INSERT INTO pages (title, slug, custom_url, content, meta_description, status, parent_slug, icon, menu_order, has_sidebar_menu) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+                        $stmt->execute([$title, $slug, $custom_url, $content, $meta_description, $status, $parent_slug, $icon, $menu_order, $has_sidebar_menu]);
                         $success_message = 'Stránka byla přidána.';
                         $action = 'list';
                     }
@@ -58,8 +59,8 @@ if ($action === 'add' || $action === 'edit') {
                     if ($stmt->fetch()) {
                         $error_message = 'Slug už existuje, vyberte jiný.';
                     } else {
-                        $stmt = $pdo->prepare("UPDATE pages SET title = ?, slug = ?, content = ?, meta_description = ?, status = ?, parent_slug = ?, icon = ?, menu_order = ?, has_sidebar_menu = ? WHERE id = ?");
-                        $stmt->execute([$title, $slug, $content, $meta_description, $status, $parent_slug, $icon, $menu_order, $has_sidebar_menu, $id]);
+                        $stmt = $pdo->prepare("UPDATE pages SET title = ?, slug = ?, custom_url = ?, content = ?, meta_description = ?, status = ?, parent_slug = ?, icon = ?, menu_order = ?, has_sidebar_menu = ? WHERE id = ?");
+                        $stmt->execute([$title, $slug, $custom_url, $content, $meta_description, $status, $parent_slug, $icon, $menu_order, $has_sidebar_menu, $id]);
                         $success_message = 'Stránka byla aktualizována.';
                         $action = 'list';
                     }
@@ -204,6 +205,7 @@ include 'includes/admin_header.php';
                                 </th>
                                 <th>Název</th>
                                 <th>URL</th>
+                                <th>Vlastní URL</th>
                                 <th>Vytvořeno</th>
                                 <th>Status</th>
                                 <th width="150">Akce</th>
@@ -212,7 +214,7 @@ include 'includes/admin_header.php';
                         <tbody>
                             <?php if (empty($pages)): ?>
                                 <tr>
-                                    <td colspan="6" class="text-center py-4">
+                                    <td colspan="7" class="text-center py-4">
                                         <i class="fas fa-file-alt fa-3x text-muted mb-3"></i>
                                         <h5>Zatím nemáte žádné stránky</h5>
                                         <p class="text-muted">Přidejte svou první stránku kliknutím na tlačítko výše</p>
@@ -235,6 +237,15 @@ include 'includes/admin_header.php';
                                         </td>
                                         <td>
                                             <code><?= htmlspecialchars($page['slug']) ?></code>
+                                        </td>
+                                        <td>
+                                            <?php if (!empty($page['custom_url'])): ?>
+                                                <span class="badge bg-info">
+                                                    <i class="fas fa-external-link-alt me-1"></i><?= htmlspecialchars($page['custom_url']) ?>
+                                                </span>
+                                            <?php else: ?>
+                                                <span class="text-muted">—</span>
+                                            <?php endif; ?>
                                         </td>
                                         <td>
                                             <?= date('d.m.Y', strtotime($page['created_at'])) ?>
@@ -311,6 +322,12 @@ include 'includes/admin_header.php';
                             <label for="slug">URL slug *</label>
                             <input type="text" id="slug" name="slug" value="<?= htmlspecialchars($page['slug'] ?? $_POST['slug'] ?? '') ?>" class="form-control" required>
                             <small style="color: #666;">URL adresa stránky (bez mezer, jen a-z, 0-9, pomlčky)</small>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="custom_url">Vlastní URL (nepovinné)</label>
+                            <input type="text" id="custom_url" name="custom_url" value="<?= htmlspecialchars($page['custom_url'] ?? $_POST['custom_url'] ?? '') ?>" class="form-control" placeholder="např: admin/ nebo https://...">
+                            <small style="color: #666;">Pokud vyplněno, odkaz v menu povede na tuto URL místo na stránku. Použijte pro přesměrování do administrace, externí odkazy apod.</small>
                         </div>
                         
                         <div class="form-group">

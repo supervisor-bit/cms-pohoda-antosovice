@@ -184,9 +184,9 @@ try {
         
         .navbar-nav .nav-link.active {
             color: white !important;
-            background: rgba(255,255,255,0.2) !important;
+            background: #5a7a6b !important;
             font-weight: 600;
-            box-shadow: 0 4px 20px rgba(255,255,255,0.15);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
         }
 
         /* Page header */
@@ -505,6 +505,31 @@ try {
             .filters-section {
                 margin: 2rem 0;
                 padding: 1.5rem;
+            }
+            
+            /* Mobilní menu - zachovat barvu pozadí */
+            .navbar-collapse {
+                background: #6f9183 !important;
+                padding: 1rem;
+                border-radius: 8px;
+                margin-top: 0.5rem;
+            }
+            
+            .navbar-nav {
+                background: transparent !important;
+            }
+            
+            .navbar-nav .nav-link {
+                background: transparent !important;
+                margin: 0.2rem 0;
+            }
+            
+            .navbar-nav .nav-link:hover {
+                background: rgba(255,255,255,0.15) !important;
+            }
+            
+            .navbar-nav .nav-link.active {
+                background: #5a7a6b !important;
             }
         }
     </style>
